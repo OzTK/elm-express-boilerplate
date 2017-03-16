@@ -1,0 +1,13 @@
+<h1>{{context.title}}</h1>
+<p>Welcome to {{context.title}}</p>
+
+<p>
+  Go checkout our <a href="/users">users</a>!
+</p>
+
+{{#placeholder-content "js"}}
+<script>
+  var context = {{{json context}}}
+</script>
+<script src="{{assets.home.js}}"></script>
+{{/placeholder-content}}

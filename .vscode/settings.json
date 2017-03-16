@@ -1,0 +1,21 @@
+// Placez vos paramètres dans ce fichier pour remplacer les paramètres par défaut et les paramètres utilisateur.
+{
+    "javascript.validate.enable": true,
+    "standard.enable": false,
+    "elm.formatOnSave": true,
+    "standard.autoFixOnSave": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        // "**/webpack-assets.json": true,
+        // "**/node_modules": true,
+        "**/dist": true,
+        // "**/types": true,
+        // "**/elm-stuff": true,
+        "**/.vscode": true,
+        "**/*.js": { "when": "$(basename).ts" },
+        "**/*.js.map": { "when": "$(basename)" }
+    }
+}
