@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express"
-import { RouteBase, Method } from "./route-base";
+import { BaseRoute, HttpMethod } from "./base-route";
 import BaseContext from "./base-context";
 
-export default class Index extends RouteBase {
+export default class Index extends BaseRoute {
   constructor() {
-    super({ "/": Method.GET });
+    super({ "/": HttpMethod.GET });
   }
 
   protected get(path: string, req: Request, res: Response, next: NextFunction): any {

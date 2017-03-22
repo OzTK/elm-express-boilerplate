@@ -1,9 +1,9 @@
-import { RouteBase, Method } from "./route-base";
+import { BaseRoute, HttpMethod } from "./base-route";
 import { Request, Response, NextFunction } from "express";
 import User from "../models/user";
 import BaseContext from "./base-context";
 
-export default class Users extends RouteBase {
+export default class Users extends BaseRoute {
   public static readonly BASE_PATH = "/users";
   private static readonly PATH_ROOT = "/";
 
@@ -20,7 +20,7 @@ export default class Users extends RouteBase {
   ];
 
   constructor() {
-    super({ [Users.PATH_ROOT]: Method.GET });
+    super({ [Users.PATH_ROOT]: HttpMethod.GET });
   }
 
   protected get(path: string, req: Request, res: Response, next: NextFunction): any {
@@ -33,7 +33,9 @@ export default class Users extends RouteBase {
   private searchUsers(terms: string): UsersContext {
     let context = new UsersContext(terms);
     context.users = this.users;
-    context.filtered = context.search ? context.users.filter(u => u.fname === context.search || u.lname === context.search) : this.users;
+    context.filtered = context.search 
+                       ? context.users.filter(u => u.fname === context.search || u.lname === context.search)
+                       : this.users;
 
     return context;
   }

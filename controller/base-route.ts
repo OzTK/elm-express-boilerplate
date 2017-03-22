@@ -1,26 +1,26 @@
 import { Router, Request, Response, NextFunction, RequestHandler } from "express"
 
-export abstract class RouteBase {
+export abstract class BaseRoute {
   private router: Router;
 
-  constructor(paths: Dictionary<Method>) {
+  constructor(paths: Dictionary<HttpMethod>) {
     this.router = Router();
 
     Object.keys(paths).forEach(p => {
       switch (paths[p]) {
-        case Method.GET:
+        case HttpMethod.GET:
           this.router.get(p, (req: Request, res: Response, next: NextFunction) => this.get(p, req, res, next));
           break;
-        case Method.POST:
+        case HttpMethod.POST:
           this.router.post(p, (req: Request, res: Response, next: NextFunction) => this.post(p, req, res, next));
           break;
-        case Method.HEAD:
+        case HttpMethod.HEAD:
           this.router.head(p, (req: Request, res: Response, next: NextFunction) => this.head(p, req, res, next));
           break;
-        case Method.PUT:
+        case HttpMethod.PUT:
           this.router.put(p, (req: Request, res: Response, next: NextFunction) => this.put(p, req, res, next));
           break;
-        case Method.DELETE:
+        case HttpMethod.DELETE:
           this.router.delete(p, (req: Request, res: Response, next: NextFunction) => this.delete(p, req, res, next));
           break;
         default:
@@ -42,7 +42,7 @@ export abstract class RouteBase {
   }
 }
 
-export enum Method {
+export enum HttpMethod {
   HEAD,
   GET,
   POST,
