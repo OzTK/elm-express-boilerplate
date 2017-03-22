@@ -1,33 +1,29 @@
 import { createServer, Server as HttpServer,  } from "http";
 import * as debug from "debug";
-import App from "./app";
+import { IApp, IServer } from 'app'
 
-export default class Server {
-  private app: App;
+export default class Server implements IServer {
+  private app: IApp;
   private httpServer: HttpServer;
   private port: string | number;
   private debug: debug.IDebugger
 
-  constructor(app: App) {
+  constructor(app: IApp) {
     this.app = app;
     this.debug = debug("testexpress:server");
   }
 
-  start(listenPort: string | number) {
+  /**
+   * Starts the server using the app it was constructed with.
+   * @param listenPort port for the server to listen on
+   */
+  start(listenPort: string | number): void {
     const expressApp = this.app.init();
-
-    /**
-     * Create HTTP server.
-     */
 
     this.httpServer = createServer(expressApp);
 
     this.port = this.normalizePort(listenPort);
     expressApp.set("port", this.port);
-
-    /**
-     * Listen on provided port, on all network interfaces.
-     */
 
     this.httpServer.listen(this.port);
     this.httpServer.on("error", this.onError.bind(this));
@@ -36,8 +32,8 @@ export default class Server {
 
   /**
    * Normalize a port into a number, string, or false.
+   * @param port port value to normalize
    */
-
   private normalizePort(port: string | number): any {
     if (typeof port === "string") {
       // named pipe
@@ -54,8 +50,8 @@ export default class Server {
 
   /**
    * Event listener for HTTP server "error" event.
+   * @param error error sent by HTTP server
    */
-
   private onError(error: any) {
     if (error.syscall !== "listen") {
       throw error;
@@ -83,7 +79,6 @@ export default class Server {
   /**
    * Event listener for HTTP server "listening" event.
    */
-
   private onListening() {
     const addr = this.httpServer.address();
     const bind = typeof addr === "string"

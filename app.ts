@@ -12,11 +12,12 @@ import { BaseCustomMiddleware } from "./middleware/base-custom-middleware";
 import HandlebarsPlaceholderHelper from "./views/helpers/placeholder-helper";
 import HandlebarsJsonHelper from "./views/helpers/json-helper";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
+import { IApp } from 'app'
 
 import Index from "./controller/index";
 import Users from "./controller/users";
 
-export default class App {
+export default class App implements IApp {
   private app: express.Express;
 
   constructor() {

@@ -1,9 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
 var testExpressApp = require('../app')
 var testExpressServer = require('../server')
 
