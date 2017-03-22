@@ -1,9 +1,9 @@
-import { BaseRoute, HttpMethod } from "./base-route";
+import { BaseController, HttpMethod } from "./base-controller";
 import { Request, Response, NextFunction } from "express";
 import User from "../models/user";
 import BaseContext from "./base-context";
 
-export default class Users extends BaseRoute {
+export default class Users extends BaseController {
   public static readonly BASE_PATH = "/users";
   private static readonly PATH_ROOT = "/";
 

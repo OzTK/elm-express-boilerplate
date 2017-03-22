@@ -1,15 +1,17 @@
 import { Request, Response, NextFunction } from "express"
-import { BaseRoute, HttpMethod } from "./base-route";
+import { BaseController, HttpMethod } from "./base-controller";
 import BaseContext from "./base-context";
 
-export default class Index extends BaseRoute {
+export default class Index extends BaseController {
   constructor() {
     super({ "/": HttpMethod.GET });
   }
 
   protected get(path: string, req: Request, res: Response, next: NextFunction): any {
-    let ctx = new BaseContext("Home Page");
-    ctx.currentPath = req.path;
-    res.render("index", { context: ctx });
-  };
+    if (path == "/") {
+      let ctx = new BaseContext("Home Page");
+      ctx.currentPath = req.path;
+      res.render("index", { context: ctx });
+    }
+  }
 }

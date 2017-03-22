@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction, RequestHandler } from "express"
 
-export abstract class BaseRoute {
+export abstract class BaseController {
   private router: Router;
 
   constructor(paths: Dictionary<HttpMethod>) {
