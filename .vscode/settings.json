@@ -9,11 +9,8 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        // "**/webpack-assets.json": true,
-        // "**/node_modules": true,
-        "**/dist": true,
-        // "**/types": true,
-        // "**/elm-stuff": true,
+        "**/node_modules": true,
+        "**/elm-stuff": true,
         "**/.vscode": true,
         "**/*.js": { "when": "$(basename).ts" },
         "**/*.js.map": { "when": "$(basename)" }
