@@ -3,6 +3,16 @@ module ElmStyleConfig exposing (..)
 import Css exposing (..)
 
 
+primaryColor : Color
+primaryColor =
+    hex "03A9F4"
+
+
 primaryAccentColor : Color
 primaryAccentColor =
-    hex "ccffaa"
+    hex "00BCD4"
+
+
+primaryTextColor : Color
+primaryTextColor =
+    hex "ffffff"
