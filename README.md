@@ -14,6 +14,12 @@ The purpose of the project is to have a good balance between a good starting set
 
 ## Installation
 
+Just clone the repository and remove the git folder:
+
+```shell
+$ git clone https://github.com/OzTK/elm-express-typescript-webpack-boilerplate MyProject && rm -rf .git
+```
+
 ## Documentation
 
 ### Server-side base architecture

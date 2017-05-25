@@ -2,7 +2,7 @@ node_modules
 elm-stuff
 public/javascripts
 public/stylesheets
-client/styles
+client/styles/*
 *.js
 *.js.map
 webpack-assets.json
