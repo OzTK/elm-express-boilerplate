@@ -1,7 +1,16 @@
 {
-  "name": "testexpress",
-  "version": "0.0.0",
-  "private": true,
+  "name": "elm-express-typescript-webpack-boilerplate",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^0.10.0",
+    "node": "^7.7.1"
+  },
+  "author": {
+    "name": "Paul Duguet",
+    "email": "opauldo@gmail.com",
+    "url": "https://github.com/OzTK"
+  },
+  "private": false,
   "scripts": {
     "build": "npm-run-all ts-build elm-css wp",
     "dev": "npm-run-all ts-build elm-css wp-dev",
