@@ -13,8 +13,10 @@ export default class Users extends BaseController {
     { fname: "Rob", lname: "Stark", age: 54 },
     { fname: "Aria", lname: "Stark", age: 54 },
     { fname: "Bran", lname: "Stark", age: 54 },
-    { fname: "Catherine", lname: "Stark", age: 25 },
+    { fname: "Sanza", lname: "Stark", age: 54 },
+    { fname: "Cathelyn", lname: "Stark", age: 25 },
     { fname: "Thyrion", lname: "Lannister", age: 30 },
+    { fname: "Jamie", lname: "Lannister", age: 30 },
     { fname: "Cersei", lname: "Lannister", age: 10 },
     { fname: "Tywin", lname: "Lannister", age: 19 }
   ];

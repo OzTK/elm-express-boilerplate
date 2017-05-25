@@ -15,4 +15,14 @@ primaryAccentColor =
 
 primaryTextColor : Color
 primaryTextColor =
+    hex "000000"
+
+
+accentTextColor : Color
+accentTextColor =
     hex "ffffff"
+
+
+mainBackgroundColor : Color
+mainBackgroundColor =
+    hex "FAFAFA"

@@ -40,13 +40,6 @@ export = (env: any) => {
       rules: [
         { test: /(?!css)\.elm$/, exclude: [/elm-stuff/, /node_modules/], use: "elm-webpack-loader?verbose=true&warn=true" },
         { test: /\.ts$/, use: "ts-loader", exclude: /node_modules/ },
-        { test: /\.styl$/
-          , use: ExtractTextPlugin.extract({
-              fallback: "style-loader",
-              use: [ "css-loader", "stylus-loader"] 
-            })
-          , exclude: /node_modules/ 
-        },
         { test: /\.css$/
           , use: ExtractTextPlugin.extract({
               fallback: "style-loader",

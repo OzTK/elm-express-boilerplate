@@ -70,7 +70,7 @@ searchView searchQuery =
             [ input
                 [ type_ "search"
                 , name "search"
-                , placeholder "Search User"
+                , placeholder "Search GOT"
                 , value searchQuery
                 , onInput (\s -> SearchChanged s)
                 ]

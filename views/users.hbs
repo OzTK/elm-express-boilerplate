@@ -1,7 +1,7 @@
 <div id="app">
     {{!-- This content is a server-side loaded placeholder (-> JS deactivated or search engines) --}}
     <form action="/" method="GET">
-      <input type="search" name="search" placeholder="search users" value="{{context.search}}">
+      <input type="search" name="search" placeholder="search <GOT>" value="{{context.search}}">
     </form>
     <ul class="Users">
     {{#each context.filtered}}

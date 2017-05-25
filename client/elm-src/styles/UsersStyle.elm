@@ -1,7 +1,7 @@
 module UsersStyle exposing (..)
 
 import Css exposing (..)
-import Css.Elements exposing (body, li)
+import Css.Elements exposing (body, ul, li)
 import ElmStyleConfig exposing (..)
 
 
@@ -13,8 +13,7 @@ css : Stylesheet
 css =
     stylesheet
         [ class Users
-            [ padding <| px 8
-            , children
+            [ children
                 [ li
                     [ color primaryAccentColor
                     ]
