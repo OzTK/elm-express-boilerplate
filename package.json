@@ -14,7 +14,7 @@
     "type": "Github",
     "url": "https://github.com/OzTK"
   },
-  "license": "MIT License",
+  "license": "MIT",
   "private": false,
   "scripts": {
     "build": "npm-run-all ts-build elm-css wp",
