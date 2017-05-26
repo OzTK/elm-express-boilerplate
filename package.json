@@ -10,6 +10,11 @@
     "email": "opauldo@gmail.com",
     "url": "https://github.com/OzTK"
   },
+  "repository": {
+    "type": "Github",
+    "url": "https://github.com/OzTK"
+  },
+  "license": "MIT License",
   "private": false,
   "scripts": {
     "build": "npm-run-all ts-build elm-css wp",
