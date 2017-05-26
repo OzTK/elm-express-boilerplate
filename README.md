@@ -58,8 +58,6 @@ views all lie in the /view folder as .hbs files, as well as a few helpers in the
 #### Middleware
 The /middleware folder holds custom middlewares that can be passed to Express in the form of classes. The BaseCustomMiddleware defines a base contract and behavior for those. Here, the WebpackAssetsParser custom middleware is used to deserialize the Webpack assets file and make it available in templates through a local variable.
 
-**--> Is BaseCustomMiddleware overkill? Do we really need a base class for that?**
-
 #### Controllers (routes)
 The concept of route in express is extended here to have a little more structure around server-side logic in the form of a controller. The BaseController class takes care of interacting with Express' route handling to have simple controllers with minimal code inside. It provides callbacks to set routes by providing methods to override depending on the HTTP method desired:
 
