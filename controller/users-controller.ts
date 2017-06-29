@@ -1,9 +1,13 @@
-import { BaseController, HttpMethod } from "./base-controller";
 import { Request, Response, NextFunction } from "express";
 import User from "../models/user";
 import BaseContext from "./base-context";
+import { interfaces, Controller, Get } from "inversify-express-utils";
+import { injectable } from "inversify";
 
-export default class Users extends BaseController {
+@injectable()
+@Controller(UsersController.BASE_PATH)
+export default class UsersController implements interfaces.Controller {
+  public static readonly TAG = "UsersController";
   public static readonly BASE_PATH = "/users";
   private static readonly PATH_ROOT = "/";
 
@@ -21,15 +25,10 @@ export default class Users extends BaseController {
     { fname: "Tywin", lname: "Lannister", age: 19 }
   ];
 
-  constructor() {
-    super({ [Users.PATH_ROOT]: HttpMethod.GET });
-  }
-
-  protected get(path: string, req: Request, res: Response, next: NextFunction): any {
-    if (path == Users.PATH_ROOT) {
-      let ctx = this.searchUsers(req.query.search ? req.query.search : "");
-      res.render("users", { context: ctx });
-    }
+  @Get(UsersController.PATH_ROOT)
+  protected get(req: Request, res: Response, next: NextFunction): any {
+    let ctx = this.searchUsers(req.query.search ? req.query.search : "");
+    res.render("users", { context: ctx });
   };
 
   private searchUsers(terms: string): UsersContext {
@@ -49,8 +48,7 @@ class UsersContext extends BaseContext {
   search: string;
 
   constructor(search: string) {
-    super(null);
+    super("My Users");
     this.search = search;
-    this.title = "My Users";
   };
 }

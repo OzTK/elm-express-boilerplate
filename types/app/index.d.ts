@@ -4,10 +4,7 @@ export = app
 
 declare namespace app {
     interface IApp {
-        init(): express.Express;
-    }
-
-    interface IServer {
+        getConfig(): any;
         start(listenPort: number | string): void;
     }
 }

@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-var testExpressApp = require('../app')
-var testExpressServer = require('../server')
-
-var app = new testExpressApp.default()
-var srv = new testExpressServer.default(app)
-srv.start(process.env.PORT || '3000')
+let MyApp = require('../app').default;
+let app = MyApp.getInstance();
+app.start(process.env.PORT || '3000')
