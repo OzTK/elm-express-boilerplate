@@ -1,5 +1,5 @@
 {
-  "name": "elm-express-typescript-webpack-boilerplate",
+  "name": "elm-express-boilerplate",
   "version": "0.1.0",
   "engines": {
     "vscode": "^0.10.0",

@@ -1,22 +1,23 @@
 module Users exposing (main)
 
-import Html exposing (Html, h1, input, text, ul, li, div, form, label)
+import Html exposing (Html, h1, input, text, ul, li, div, form, label, p)
 import Html.Attributes exposing (attribute, type_, name, placeholder, value)
 import Html.Events exposing (onInput)
 import Html.CssHelpers exposing (withNamespace)
 import UsersStyle exposing (..)
 import User exposing (User)
+import UsersService
 
 
 -- MODEL
 
 
 type alias Model =
-    { users : UserList, search : String }
+    { users : UserList, search : String, errorMessage : Maybe String }
 
 
 type alias Flags =
-    Model
+    { users : UserList, search : String }
 
 
 type alias UserList =
@@ -25,7 +26,12 @@ type alias UserList =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { users = flags.users, search = flags.search }, Cmd.none )
+    ( { users = flags.users
+      , search = flags.search
+      , errorMessage = Nothing
+      }
+    , Cmd.none
+    )
 
 
 
@@ -34,25 +40,30 @@ init flags =
 
 type Msg
     = SearchChanged String
+    | SearchResult UsersService.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchChanged s ->
-            ( { model | search = s }, Cmd.none )
+            ( { model | search = s }, Cmd.map SearchResult <| UsersService.searchUsers s )
+
+        SearchResult (UsersService.GotUsers (Ok u)) ->
+            ( { model | users = u, errorMessage = Nothing }, Cmd.none )
+
+        SearchResult (UsersService.GotUsers (Err u)) ->
+            ( { model | errorMessage = Just "Error retrieving users" }, Cmd.none )
 
 
-filterUsers : String -> UserList -> UserList
-filterUsers searchQuery users =
-    List.filter
-        (\u ->
-            searchQuery
-                == ""
-                || String.contains (String.toLower searchQuery) (String.toLower u.lname)
-                || String.contains (String.toLower searchQuery) (String.toLower u.fname)
-        )
-        users
+errorClass : Maybe String -> Html.Attribute msg
+errorClass err =
+    case err of
+        Nothing ->
+            class [ Gone ]
+
+        Just error ->
+            class [ Error ]
 
 
 
@@ -84,13 +95,17 @@ userView user =
     li [] [ text (user.fname ++ " " ++ user.lname) ]
 
 
+errorView : Maybe String -> Html msg
+errorView errorMessage =
+    p [ errorClass errorMessage ] [ text <| Maybe.withDefault "" errorMessage ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ searchView model.search
-        , ul [ class [ Users ] ] <|
-            List.map userView <|
-                filterUsers model.search model.users
+        , errorView model.errorMessage
+        , ul [ class [ Users ] ] <| List.map userView <| model.users
         ]
 
 

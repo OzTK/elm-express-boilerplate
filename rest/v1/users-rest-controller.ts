@@ -33,6 +33,10 @@ export default class UsersRestController implements interfaces.Controller {
 
   @Get(UsersRestController.PATH_USERS)
   public async getUsers(req: Request, res: Response) {
-    res.json(this.users);
+    let filteredUsers = this.users;
+    if (req.query.s) {
+      filteredUsers = this.users.filter(u => u.fname === req.query.s || u.lname === req.query.s)
+    }
+    res.json(filteredUsers);
   }
 }

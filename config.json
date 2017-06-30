@@ -1,5 +1,4 @@
 {
   "connectionString": "postgres://localhost/friends_later",
-  "appName": "My Late Friends",
-  "delay": false
+  "appName": "elm-express-boilerplate"
 }
