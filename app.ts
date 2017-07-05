@@ -46,6 +46,7 @@ export default class App implements IApp {
   private initServer(): void {
     let app = express();
     this.config = this.loadConfig(app);
+    
     let container = getContainer(this.config);
     this.server = new InversifyExpressServer(container, null, null, app);
 

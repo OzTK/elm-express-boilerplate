@@ -48,44 +48,22 @@ The App class (*app.ts*) holds Express configuration and takes care of gluing to
 #### View engine
 Handlebars was chosen as a view engine for its extreme simplicity, performances and built-in integration with Express. It can pretty easily be replaced with another Express' supported view engine.
 
-**--> TODO: Make view engine setup generic to easily allow other engines to be configured?**
+**--> TODO: Make view engine setup generic to easily allow other engines to be configured**
+**--> Even better: make it usable with [elm-server-side-renderer]("https://github.com/eeue56/elm-server-side-renderer")
 
 views all lie in the /view folder as .hbs files, as well as a few helpers in the /views/helpers folder:
 - BaseHelper: Defines a base class to ease the creation of new custom helpers
-- JsonHelper: Very simple helper allowing to stringify a json object inside a template (This is used here to serialize the Webpack assets file)
-- PlaceholderHelper: Allows to define placeholders in a layout view to be replaced in children views by portions of HTML (This is very useful to put script/link tags in the head or at the bottom of the page)
+- JsonHelper: Very simple helper allowing to stringify a json object inside a template (This is used here to pass a context object as a Flag argument to our Elm app)
+- PlaceholderHelper: Allows to define placeholders in a layout view to be replaced in children views by portions of HTML (This is very useful to put script/link tags in the head or at the bottom of the body)
 
 #### Middleware
 The /middleware folder holds custom middlewares that can be passed to Express in the form of classes. The BaseCustomMiddleware defines a base contract and behavior for those. Here, the WebpackAssetsParser custom middleware is used to deserialize the Webpack assets file and make it available in templates through a local variable.
 
+### IoC
+[Inversify](http://inversify.io/) is used as an IoC container. It allows easy dependency injection via centralized instance resolution.
+
 #### Controllers (routes)
-The concept of route in express is extended here to have a little more structure around server-side logic in the form of a controller. The BaseController class takes care of interacting with Express' route handling to have simple controllers with minimal code inside. It provides callbacks to set routes by providing methods to override depending on the HTTP method desired:
-
-```ts
-  protected head(path: string, req: Request, res: Response, next: NextFunction): any {};
-  protected get(path: string, req: Request, res: Response, next: NextFunction): any {};
-  protected post(path: string, req: Request, res: Response, next: NextFunction): any {};
-  protected put(path: string, req: Request, res: Response, next: NextFunction): any {};
-  protected delete(path: string, req: Request, res: Response, next: NextFunction): any {};
-  protected all(path: string, req: Request, res: Response, next: NextFunction): any {};
-```
-
-The inheriting controller then only has to define the routes needed in the constructor, along with the method...
-```ts
-  constructor() {
-    super({ "/": HttpMethod.GET });
-  }
-```
-... and implement the corresponding method from the parent:
-```ts
-  protected get(path: string, req: Request, res: Response, next: NextFunction): any {
-    if (path == "/") {
-      let ctx = new BaseContext("Home Page");
-      ctx.currentPath = req.path;
-      res.render("index", { context: ctx });
-    }
-  }
-```
+[inversify-express-utils](https://github.com/inversify/inversify-express-utils)inversify-express-utils is used to have more maintainable controllers that can be injected. It is bootstrapped in the App and is used in place of just the regular Express App.
 
 ### Client-side structure
 
@@ -119,5 +97,3 @@ fileStructure =
         , ( "client/styles/users.css", Css.File.compile [ UsersStyle.css ] )
         ]
 ```
-
-**NOTE: Right now, this intermediary step generating css files to be then picked up by webpack is used. It seems satisfying enough for now but could probably be improved in the future to avoid unnecessary intermediate files**
