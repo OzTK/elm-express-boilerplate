@@ -16,6 +16,7 @@ import HandlebarsJsonHelper from "./views/helpers/json-helper";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
 import { IApp } from 'app';
 import getContainer from "./di/container";
+import HttpError from "./models/http-error";
 
 export default class App implements IApp {
   private static app: IApp;
@@ -110,21 +111,26 @@ export default class App implements IApp {
   }
 
   private initErrors(app: express.Application) {
-    // catch 404 and forward to error handler
     app.use((req, res, next) => {
-      const err = new Error("Not Found");
-      res.status(404);
+      const err = new HttpError(404, "This url does not exist");
       next(err);
     });
 
     // error handler
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-      // set locals, only providing error in development
+      res.status(err.status || 500);
+
+      if (req.header("Accept") === "application/json") {
+        res.statusMessage = err.message;
+        res.end();
+        return;
+      }
+
       res.locals.message = err.message;
+      // set locals, only providing error in development
       res.locals.error = req.app.get("env") === "development" ? err : {};
 
       // render the error page
-      res.status(err.status || 500);
       res.render("error");
     });
   }

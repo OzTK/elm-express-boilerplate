@@ -1,17 +1,18 @@
 module UsersService exposing (Msg(..), loadUsers, searchUsers)
 
-import Http
+import RemoteData.Http as Http
 import Config exposing (config)
 import User exposing (User, userDecoder)
 import Url exposing (url, urlWithParams)
 import Json.Decode exposing (list)
+import RemoteData exposing (WebData)
 
 
 -- UPDATE
 
 
 type Msg
-    = GotUsers (Result Http.Error (List User))
+    = GotUsers (WebData (List User))
 
 
 
@@ -20,15 +21,16 @@ type Msg
 
 loadUsers : Cmd Msg
 loadUsers =
-    Http.send GotUsers <|
-        Http.get
-            (url config.wsUrl "users")
-            (list userDecoder)
+    Http.get
+        (url config.wsUrl "users")
+        GotUsers
+        (list userDecoder)
 
 
 searchUsers : String -> Cmd Msg
 searchUsers search =
-    Http.send GotUsers <|
-        Http.get
-            (urlWithParams config.wsUrl "users" [] [ ( "s", search ) ])
-            (list userDecoder)
+    Http.getWithConfig
+        config.getConfig
+        (urlWithParams config.wsUrl "users/blabla" [] [ ( "s", search ) ])
+        GotUsers
+        (list userDecoder)

@@ -37,6 +37,12 @@ export default class UsersRestController implements interfaces.Controller {
     if (req.query.s) {
       filteredUsers = this.users.filter(u => u.fname === req.query.s || u.lname === req.query.s)
     }
-    res.json(filteredUsers);
+
+    if (filteredUsers.length === 0) {
+      res.statusMessage = "No user with this name was found";
+      res.status(404).end();
+    } else {
+      res.json(filteredUsers);
+    }
   }
 }

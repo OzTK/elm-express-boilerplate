@@ -7,13 +7,15 @@ import Html.CssHelpers exposing (withNamespace)
 import UsersStyle exposing (..)
 import User exposing (User)
 import UsersService
+import RemoteData exposing (RemoteData(..), WebData)
+import Http
 
 
 -- MODEL
 
 
 type alias Model =
-    { users : UserList, search : String, errorMessage : Maybe String }
+    { users : WebData UserList, search : String, errorMessage : Maybe String }
 
 
 type alias Flags =
@@ -26,7 +28,7 @@ type alias UserList =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { users = flags.users
+    ( { users = Success flags.users
       , search = flags.search
       , errorMessage = Nothing
       }
@@ -49,11 +51,8 @@ update msg model =
         SearchChanged s ->
             ( { model | search = s }, Cmd.map SearchResult <| UsersService.searchUsers s )
 
-        SearchResult (UsersService.GotUsers (Ok u)) ->
-            ( { model | users = u, errorMessage = Nothing }, Cmd.none )
-
-        SearchResult (UsersService.GotUsers (Err u)) ->
-            ( { model | errorMessage = Just "Error retrieving users" }, Cmd.none )
+        SearchResult (UsersService.GotUsers u) ->
+            ( { model | users = u }, Cmd.none )
 
 
 errorClass : Maybe String -> Html.Attribute msg
@@ -95,17 +94,50 @@ userView user =
     li [] [ text (user.fname ++ " " ++ user.lname) ]
 
 
-errorView : Maybe String -> Html msg
-errorView errorMessage =
-    p [ errorClass errorMessage ] [ text <| Maybe.withDefault "" errorMessage ]
+errorView : Http.Error -> Html msg
+errorView error =
+    p [ class [ Error ] ]
+        [ text
+            (case error of
+                Http.BadStatus err ->
+                    err.status.message
+
+                Http.BadPayload _ _ ->
+                    "Wrong arguments were used to query the data"
+
+                Http.BadUrl u ->
+                    "This service URL is invalid: " ++ u
+
+                Http.NetworkError ->
+                    "Impossible to reach the service. Do you have Internet connectivity?"
+
+                Http.Timeout ->
+                    "Your request timeout. The server might not be available"
+            )
+        ]
+
+
+usersView : WebData (List User) -> Html Msg
+usersView users =
+    case users of
+        Success u ->
+            ul [ class [ Users ] ] <| List.map userView <| u
+
+        Loading ->
+            text "Loading..."
+
+        Failure err ->
+            errorView err
+
+        NotAsked ->
+            text "Please type a name"
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ searchView model.search
-        , errorView model.errorMessage
-        , ul [ class [ Users ] ] <| List.map userView <| model.users
+        , usersView model.users
         ]
 
 
