@@ -7,8 +7,17 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Run app",
             "program": "${workspaceRoot}/bin/www"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Live debug app",
+            "program": "${workspaceRoot}/bin/www",
+            "env": {
+                "DEBUG": "true"
+            }
         }
     ]
 }

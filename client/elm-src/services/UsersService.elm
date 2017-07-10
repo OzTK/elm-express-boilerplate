@@ -31,6 +31,6 @@ searchUsers : String -> Cmd Msg
 searchUsers search =
     Http.getWithConfig
         config.getConfig
-        (urlWithParams config.wsUrl "users/blabla" [] [ ( "s", search ) ])
+        (urlWithParams config.wsUrl "users" [] [ ( "s", search ) ])
         GotUsers
         (list userDecoder)

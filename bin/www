@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-
 let MyApp = require('../app').default;
-let app = MyApp.getInstance();
+const conf = process.env.DEBUG ? require("../config.dev.json") : require("../config.json");
+
+let app = MyApp.getInstance(conf);
 app.start(process.env.PORT || '3000')

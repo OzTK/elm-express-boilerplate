@@ -4,7 +4,7 @@ export = app
 
 declare namespace app {
     interface IApp {
-        getConfig(): any;
+        config: any;
         start(listenPort: number | string): void;
     }
 }

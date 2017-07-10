@@ -12,45 +12,67 @@ let plugins = [
     root: path.resolve(__dirname, "public"),
     verbose: true
   }),
-  new AssetsPlugin()
+  new AssetsPlugin(),
+  new webpack.NoEmitOnErrorsPlugin()
 ];
+
+let entries: any = {
+  shared: ["./client/src/shared.ts"],
+  users: ["./client/src/users.ts"]
+}
 
 export = (env: any) => {
   let cssName = "[name].css";
-  if (env.production) {
+  let jsName = "[name].js";
+  let cssLoader : string[] | webpack.Loader[] = 
+    ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: [ "css-loader" ],
+        publicPath: "/"
+    });
+  
+  if (env && env.production) {
     plugins.push(new webpack.optimize.UglifyJsPlugin());
     cssName = "[chunkhash].[name].css";
+    jsName = "[chunkhash].[name].js";
+  }
+
+  if (env.hot) {
+    cssLoader = [ "style-loader", "css-loader" ];
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+
+    Object.keys(entries).forEach(entryKey => {
+      entries[entryKey].push("webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000");
+    });
   }
 
   plugins.push(new ExtractTextPlugin("stylesheets/" + cssName));
 
   return {
-    entry: {
-      shared: "./client/src/shared.ts",
-      users: "./client/src/users.ts"
-    },
-    output: {
-      filename: "javascripts/" + (env.production ? "[chunkhash].[name].js" : "[name].js"),
-      path: path.resolve(__dirname, "public")
-    },
+    entry: entries,
     resolve: {
       extensions: [".ts", ".js", ".elm"]
     },
     module: {
       rules: [
-        { test: /(?!css)\.elm$/, exclude: [/elm-stuff/, /node_modules/], use: "elm-webpack-loader?verbose=true&warn=true" },
+        { 
+          test: /(?!css)\.elm$/,
+          exclude: [/elm-stuff/, /node_modules/],
+          use: ["elm-hot-loader", "elm-webpack-loader?verbose=true&warn=true"]
+        },
         { test: /\.ts$/, use: "ts-loader", exclude: /node_modules/ },
-        { test: /\.css$/
-          , use: ExtractTextPlugin.extract({
-              fallback: "style-loader",
-              use: [ "css-loader" ],
-              publicPath: "/"
-            })
-          , exclude: /node_modules/ 
+        { test: /\.css$/,
+          use: cssLoader,
+          exclude: /node_modules/ 
         }
       ],
       noParse: [/\.elm$/]
     },
-    plugins: plugins
+    plugins: plugins,
+    output: {
+      filename: "javascripts/" + jsName,
+      path: path.resolve(__dirname, "public"),
+      publicPath: "/"
+    },
   }
 }

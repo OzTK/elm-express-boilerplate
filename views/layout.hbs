@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{context.title}} - {{context.appName}}</title>
-    <link rel='stylesheet' href='{{assets.shared.css}}' />
+    {{#if assets.shared.css }} <link rel='stylesheet' href='{{assets.shared.css}}' /> {{/if}}
     {{{placeholder "css"}}}
   </head>
   <body id="Page">
@@ -22,6 +22,7 @@
     </div>
   
   <script src="{{assets.manifest.js}}"></script>
+  <script src="{{assets.shared.js}}"></script>
   {{{placeholder "js"}}}
   </body>
 </html>
