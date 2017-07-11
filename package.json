@@ -17,15 +17,17 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "npm-run-all ts css wp",
-    "dev": "npm-run-all ts css wp-dev",
-    "client": "npm-run-all css wp-dev",
-    "wp": "webpack -p --env.production=true",
-    "wp-dev": "webpack --env",
+    "build": "npm-run-all ts css wp-prod",
+    "dev": "npm-run-all ts css wp",
+    "hot": "npm-run-all ts css wp-hot",
+    "client": "npm-run-all css wp",
+    "wp": "webpack --progress",
+    "wp-prod": "webpack -p --env.production --progress",
+    "wp-hot": "webpack --progress --env.hot",
     "ts": "tsc -p .",
     "css": "elm-css --module=ElmStyleSerializer client/elm-src/styles/ElmStyleSerializer.elm",
     "start": "node ./bin/www",
-    "snyk": "snyk test"
+    "test": "snyk test"
   },
   "dependencies": {
     "body-parser": "~1.17.2",
@@ -65,6 +67,7 @@
     "elm-webpack-loader": "^4.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "npm-run-all": "^4.0.2",
+    "snyk": "^1.36.2",
     "standard": "^10.0.0",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.2.2",

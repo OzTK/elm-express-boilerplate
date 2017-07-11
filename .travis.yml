@@ -7,4 +7,5 @@ before_install:
   - npm i -g elm
 
 script:
-  - npm run-script build
+  - npm build
+  - npm test
