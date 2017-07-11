@@ -40,7 +40,7 @@ So it has the base architecture coming with that kind of project:
 A key difference with that boilerplate is that everything is in TypeScript instead of JS, and more object oriented.
 
 #### Server
-The Server class (*server.ts*) gathers everything related to server's startup and run, on a low level (http). It will take care of plugin the App to the server. The logic of the www file was basically extracted in a separate class.
+The server is bootstrapped from the bin/www script where the App is instianciated and started.
 
 #### App
 The App class (*app.ts*) holds Express configuration and takes care of gluing together middlewares, routes and views.
@@ -49,7 +49,7 @@ The App class (*app.ts*) holds Express configuration and takes care of gluing to
 Handlebars was chosen as a view engine for its extreme simplicity, performances and built-in integration with Express. It can pretty easily be replaced with another Express' supported view engine.
 
 **--> TODO: Make view engine setup generic to easily allow other engines to be configured**
-**--> Even better: make it usable with [elm-server-side-renderer]("https://github.com/eeue56/elm-server-side-renderer")
+**--> Even better: make it usable with [elm-server-side-renderer]("https://github.com/eeue56/elm-server-side-renderer")**
 
 views all lie in the /view folder as .hbs files, as well as a few helpers in the /views/helpers folder:
 - BaseHelper: Defines a base class to ease the creation of new custom helpers
