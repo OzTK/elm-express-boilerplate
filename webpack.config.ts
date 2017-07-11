@@ -73,13 +73,15 @@ export = (env: any = {}) => {
       if (env.hot) {
         plugins.push(new webpack.HotModuleReplacementPlugin());
       } else {
-        plugins.push(new ExtractTextPlugin("stylesheets/[chunkhash].[name].css"));
+        // chunkhash not supported with HMR
+        plugins.push(new ExtractTextPlugin("stylesheets/" + (env.hot ? "[name].css" : "[chunkhash].[name].css")));
       }
 
       return plugins;
     })(),
     output: {
-      filename: "javascripts/[chunkhash].[name].js",
+        // chunkhash not supported with HMR
+      filename: "javascripts/" + (env.hot ? "[name].js" : "[chunkhash].[name].js"),
       path: path.resolve(__dirname, "public"),
       publicPath: "/"
     },

@@ -7,16 +7,29 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Run app",
-            "program": "${workspaceRoot}/bin/www"
+            "name": "Debug",
+            "program": "${workspaceRoot}/bin/www",
+            "env": {
+                "NODE_ENV": "development"
+            }
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "Live debug app",
+            "name": "Run",
             "program": "${workspaceRoot}/bin/www",
             "env": {
-                "DEBUG": "true"
+                "NODE_ENV": "production"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Live debug",
+            "program": "${workspaceRoot}/bin/www",
+            "env": {
+                "HOT": "true",
+                "NODE_ENV": "development"
             }
         }
     ]
