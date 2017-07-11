@@ -4,6 +4,7 @@ node_js:
 
 before_install:
   - npm i -g npm@5
+  - npm i -g elm
 
 script:
   - npm run-script build
