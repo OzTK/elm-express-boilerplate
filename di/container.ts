@@ -2,7 +2,6 @@ import "reflect-metadata"
 
 import { Container } from "inversify";
 import { interfaces, TYPE } from "inversify-express-utils";
-import TYPES from "./types"
 import UsersRestController from "../rest/v1/users-rest-controller";
 import HomeController from "../controller/home-controller";
 import UsersController from "../controller/users-controller";

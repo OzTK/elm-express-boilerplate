@@ -16,7 +16,7 @@ import HandlebarsJsonHelper from "./views/helpers/json-helper";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
 import { IApp } from 'app';
 import getContainer from "./di/container";
-import HttpError from "./models/http-error";
+import HttpError from "./http-error";
 
 import * as webpack from "webpack";
 import * as webpackDevMiddleware from "webpack-dev-middleware";

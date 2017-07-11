@@ -1,4 +1,4 @@
-import User from "../models/user";
+import User from "../model/user";
 import App from "../app";
 
 export default class BaseContext {

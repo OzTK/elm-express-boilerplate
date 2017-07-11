@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import User from "../models/user";
+import User from "../model/user";
 import BaseContext from "./base-context";
 import { interfaces, controller, httpGet } from "inversify-express-utils";
 import { injectable } from "inversify";

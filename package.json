@@ -17,10 +17,10 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "npm-run-all test ts css wp",
+    "build": "npm-run-all ts css wp",
     "dev": "npm-run-all ts css wp-dev",
     "client": "npm-run-all css wp-dev",
-    "wp": "webpack --env.production=true",
+    "wp": "webpack -p --env.production=true",
     "wp-dev": "webpack --env",
     "ts": "tsc -p .",
     "css": "elm-css --module=ElmStyleSerializer client/elm-src/styles/ElmStyleSerializer.elm",
@@ -71,6 +71,7 @@
     "typescript": "^2.4.1",
     "webpack": "^3.1.0",
     "webpack-dev-middleware": "^1.11.0",
-    "webpack-hot-middleware": "^2.18.2"
+    "webpack-hot-middleware": "^2.18.2",
+    "webpack-sources": "^1.0.1"
   }
 }

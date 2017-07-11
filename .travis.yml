@@ -3,4 +3,7 @@ node_js:
   - "7"
 
 before_install:
-- npm i -g npm@5
+  - npm i -g npm@5
+
+script:
+  - npm run-script build

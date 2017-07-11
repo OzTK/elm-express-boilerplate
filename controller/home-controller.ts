@@ -2,8 +2,7 @@ import { interfaces, controller, httpGet } from "inversify-express-utils";
 import { inject, injectable } from "inversify";
 import { Request, Response } from "express"
 import BaseContext from "./base-context";
-import TYPES from "../di/types"
-import User from "../models/user";
+import User from "../model/user";
 
 @injectable()
 @controller(HomeController.BASE_PATH)
