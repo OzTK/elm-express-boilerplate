@@ -4,52 +4,31 @@ import * as CleanWebpackPlugin from "clean-webpack-plugin";
 import * as AssetsPlugin from "assets-webpack-plugin";
 import * as ExtractTextPlugin from "extract-text-webpack-plugin";
 
-let plugins = [
-  new webpack.optimize.CommonsChunkPlugin({
-    names: ["shared", "manifest"] // Specify the common bundle's name.
-  }),
-  new CleanWebpackPlugin(["dist", "build", "javascripts", "stylesheets", "../webpack-assets.json"], {
-    root: path.resolve(__dirname, "public"),
-    verbose: true
-  }),
-  new AssetsPlugin(),
-  new webpack.NoEmitOnErrorsPlugin()
-];
-
-let entries: any = {
-  shared: ["./client/src/shared.ts"],
-  users: ["./client/src/users.ts"]
-}
-
-export = (env: any) => {
+export = (env: any = {}) => {
   let cssName = "[name].css";
   let jsName = "[name].js";
-  let cssLoader : string[] | webpack.Loader[] = 
-    ExtractTextPlugin.extract({
-        fallback: "style-loader",
-        use: [ "css-loader" ],
-        publicPath: "/"
-    });
+  let cssLoader : string[] | webpack.Loader[];
   
-  if (env && env.production) {
-    plugins.push(new webpack.optimize.UglifyJsPlugin());
+  if (env.production) {
     cssName = "[chunkhash].[name].css";
     jsName = "[chunkhash].[name].js";
   }
 
-  if (env.hot) {
-    cssLoader = [ "style-loader", "css-loader" ];
-    plugins.push(new webpack.HotModuleReplacementPlugin());
-
-    Object.keys(entries).forEach(entryKey => {
-      entries[entryKey].push("webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000");
-    });
-  }
-
-  plugins.push(new ExtractTextPlugin("stylesheets/" + cssName));
-
   return {
-    entry: entries,
+    entry: (() => {
+      let entries: any = {
+        shared: ["./client/src/shared.ts"],
+        users: ["./client/src/users.ts"]
+      };
+
+      if (env.hot) {
+        Object.keys(entries).forEach(entryKey => {
+          entries[entryKey].push("webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000");
+        });
+      }
+
+      return entries;
+    })(),
     resolve: {
       extensions: [".ts", ".js", ".elm"]
     },
@@ -62,15 +41,45 @@ export = (env: any) => {
         },
         { test: /\.ts$/, use: "ts-loader", exclude: /node_modules/ },
         { test: /\.css$/,
-          use: cssLoader,
+          use: (env.hot 
+                ? [ "style-loader", "css-loader" ]
+                : ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: [ "css-loader" ],
+                    publicPath: "/"
+                  })),
           exclude: /node_modules/ 
         }
       ],
       noParse: [/\.elm$/]
     },
-    plugins: plugins,
+    plugins: (() => {
+      let plugins = [
+        new webpack.optimize.CommonsChunkPlugin({
+          names: ["shared", "manifest"] // Specify the common bundle's name.
+        }),
+        new CleanWebpackPlugin(["javascripts", "stylesheets", "../webpack-assets.json"], {
+          root: path.resolve(__dirname, "public"),
+          verbose: true
+        }),
+        new AssetsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
+      ];
+
+      if (env.production) {
+        plugins.push(new webpack.optimize.UglifyJsPlugin());
+      }
+
+      if (env.hot) {
+        plugins.push(new webpack.HotModuleReplacementPlugin());
+      } else {
+        plugins.push(new ExtractTextPlugin("stylesheets/[chunkhash].[name].css"));
+      }
+
+      return plugins;
+    })(),
     output: {
-      filename: "javascripts/" + jsName,
+      filename: "javascripts/[chunkhash].[name].js",
       path: path.resolve(__dirname, "public"),
       publicPath: "/"
     },
