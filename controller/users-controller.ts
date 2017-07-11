@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/user";
 import BaseContext from "./base-context";
-import { interfaces, Controller, Get } from "inversify-express-utils";
+import { interfaces, controller, httpGet } from "inversify-express-utils";
 import { injectable } from "inversify";
 
 @injectable()
-@Controller(UsersController.BASE_PATH)
+@controller(UsersController.BASE_PATH)
 export default class UsersController implements interfaces.Controller {
   public static readonly TAG = "UsersController";
   public static readonly BASE_PATH = "/users";
@@ -25,7 +25,7 @@ export default class UsersController implements interfaces.Controller {
     { fname: "Tywin", lname: "Lannister", age: 19 }
   ];
 
-  @Get(UsersController.PATH_ROOT)
+  @httpGet(UsersController.PATH_ROOT)
   protected get(req: Request, res: Response, next: NextFunction): any {
     let ctx = this.searchUsers(req.query.search ? req.query.search : "");
     res.render("users", { context: ctx });

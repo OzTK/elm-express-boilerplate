@@ -1,11 +1,11 @@
-import { interfaces, Controller, Get } from "inversify-express-utils";
+import { interfaces, controller, httpGet } from "inversify-express-utils";
 import { inject, injectable } from "inversify";
 import { Request, Response } from "express"
 import TYPES from "../../di/types"
 import VERSION from "./version";
 
 @injectable()
-@Controller(UsersRestController.BASE_PATH)
+@controller(UsersRestController.BASE_PATH)
 export default class UsersRestController implements interfaces.Controller {
   public static readonly TAG = "UsersRestController";
   public static readonly BASE_PATH = "/api/" + VERSION + "/users";
@@ -26,12 +26,12 @@ export default class UsersRestController implements interfaces.Controller {
     { fname: "Tywin", lname: "Lannister", age: 19 }
   ];
 
-  @Get(UsersRestController.PATH_VERSION)
+  @httpGet(UsersRestController.PATH_VERSION)
   public async get(req: Request, res: Response) {
     res.json({ v: VERSION });
   }
 
-  @Get(UsersRestController.PATH_USERS)
+  @httpGet(UsersRestController.PATH_USERS)
   public async getUsers(req: Request, res: Response) {
     let filteredUsers = this.users;
     if (req.query.s) {
