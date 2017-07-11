@@ -1,4 +1,4 @@
-# elm-express-typescript-webpack-boilerplate
+# elm-express-boilerplate [![Build Status](https://travis-ci.org/OzTK/elm-express-boilerplate.svg?branch=master)](https://travis-ci.org/OzTK/elm-express-boilerplate)
 
 ## Intent
 
