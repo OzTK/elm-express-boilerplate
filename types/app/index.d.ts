@@ -1,5 +1,3 @@
-import * as express from "express";
-
 export = app
 
 declare namespace app {
