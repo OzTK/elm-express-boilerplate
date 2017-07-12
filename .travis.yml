@@ -1,3 +1,4 @@
+dist: trusty
 language: node_js
 node_js:
   - "7"
@@ -8,7 +9,6 @@ env:
 before_install:
   - npm i -g npm@5
   - npm i -g elm@0.18
-  - snyk protect
 
 script:
   - npm run-script build
