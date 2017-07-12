@@ -50,9 +50,9 @@
   "devDependencies": {
     "@types/body-parser": "^1.16.4",
     "@types/cors": "^2.8.1",
-    "@types/elm": "^0.12.29",
+    "@types/elm": "^0.12",
     "@types/extract-text-webpack-plugin": "^2.0.0",
-    "@types/handlebars": "^4.0.33",
+    "@types/handlebars": "^4.0.34",
     "@types/helmet": "0.0.35",
     "@types/morgan": "^1.7.32",
     "@types/serve-favicon": "^2.2.28",
