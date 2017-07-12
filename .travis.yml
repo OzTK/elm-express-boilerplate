@@ -10,5 +10,5 @@ before_install:
   - npm i -g elm@0.18
 
 script:
-  - npm build
+  - npm run-script build
   - npm test
