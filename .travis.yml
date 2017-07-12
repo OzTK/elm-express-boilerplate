@@ -8,6 +8,7 @@ env:
 before_install:
   - npm i -g npm@5
   - npm i -g elm@0.18
+  - snyk protect
 
 script:
   - npm run-script build
