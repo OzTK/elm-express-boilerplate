@@ -1,7 +1,11 @@
 import * as express from "express";
 import { join } from "path";
 import * as favicon from "serve-favicon";
-import { errorLogger, logger, winstonExpressMiddleware } from "winston-express-middleware";
+import {
+  errorLogger,
+  logger,
+  winstonExpressMiddleware
+} from "winston-express-middleware";
 import { TransportInstance, transports } from "winston";
 import "winston-daily-rotate-file";
 import * as fs from "fs";
@@ -17,7 +21,7 @@ import { BaseCustomMiddleware } from "./middleware/base-custom-middleware";
 import HandlebarsPlaceholderHelper from "./views/helpers/placeholder-helper";
 import HandlebarsJsonHelper from "./views/helpers/json-helper";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
-import { IApp } from 'app';
+import { IApp } from "app";
 import getContainer from "./di/container";
 import HttpError from "./http-error";
 
@@ -30,8 +34,8 @@ export default class App implements IApp {
   private static app: IApp;
 
   private server: InversifyExpressServer;
-  
-  public get config() : any {
+
+  public get config(): any {
     return this._config;
   }
 
@@ -54,7 +58,7 @@ export default class App implements IApp {
   private initServer(): void {
     let app = express();
     app.use(this.setupLogging(LoggingTypes.Http));
-    
+
     let container = getContainer(this.config);
     this.server = new InversifyExpressServer(container, null, null, app);
 
@@ -88,18 +92,17 @@ export default class App implements IApp {
   }
 
   private getCustomMiddlewares(): Array<BaseCustomMiddleware> {
-    return [
-      new WebpackAssetsParser()
-    ];
+    return [new WebpackAssetsParser()];
   }
 
   private initMiddlewares(app: express.Application) {
-    app.use(favicon(join(__dirname, "public", "favicon.ico")));
-    app.use(json());
-    app.use(urlencoded({ extended: false }));
-    app.use(helmet());
-    app.use(cors());
-    app.use(express.static(join(__dirname, "public")));
+    app
+      .use(favicon(join(__dirname, "public", "favicon.ico")))
+      .use(json())
+      .use(urlencoded({ extended: false }))
+      .use(helmet())
+      .use(cors())
+      .use(express.static(join(__dirname, "public")));
 
     if (this.config.env.hot) {
       this.initHMR(app);
@@ -111,7 +114,9 @@ export default class App implements IApp {
     });
   }
 
-  private setupLogging(loggingType: LoggingTypes): express.RequestHandler | express.ErrorRequestHandler {
+  private setupLogging(
+    loggingType: LoggingTypes
+  ): express.RequestHandler | express.ErrorRequestHandler {
     let transport: TransportInstance;
 
     if (this.config.env.prod) {
@@ -127,7 +132,7 @@ export default class App implements IApp {
           fname = "errors";
           dname = "error";
           break;
-      
+
         default:
           fname = "logs";
           dname = "log";
@@ -145,15 +150,25 @@ export default class App implements IApp {
     }
 
     return loggingType == LoggingTypes.Http
-      ? logger({ transports: [ transport ], expressFormat: true })
-      : errorLogger({ transports: [ transport ] });
+      ? logger({ transports: [transport], expressFormat: true })
+      : errorLogger({ transports: [transport] });
   }
 
   private initHMR(app: express.Application) {
-      const wpConfig = require("./webpack.config.js")(this.config.env);
-      const compiler = webpack(wpConfig);
-      app.use(webpackDevMiddleware(compiler, { publicPath: wpConfig.output.publicPath, stats: { colors: true } }));
-      app.use(webpackHotMiddleware(compiler, { path: "/__webpack_hmr", heartbeat: 10 * 1000 }));
+    const wpConfig = require("./webpack.config.js")(this.config.env);
+    const compiler = webpack(wpConfig);
+    app.use(
+      webpackDevMiddleware(compiler, {
+        publicPath: wpConfig.output.publicPath,
+        stats: { colors: true }
+      })
+    );
+    app.use(
+      webpackHotMiddleware(compiler, {
+        path: "/__webpack_hmr",
+        heartbeat: 10 * 1000
+      })
+    );
   }
 
   private initErrors(app: express.Application) {
@@ -161,27 +176,34 @@ export default class App implements IApp {
       const err = new HttpError(404, "This url does not exist");
       next(err);
     });
-    
+
     // Error logger
     app.use(this.setupLogging(LoggingTypes.Error));
 
     // error handler
-    app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-      res.status(err.status || 500);
+    app.use(
+      (
+        err: any,
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) => {
+        res.status(err.status || 500);
 
-      if (req.header("Accept") === "application/json") {
-        res.statusMessage = err.message;
-        res.end();
-        return;
+        if (req.header("Accept") === "application/json") {
+          res.statusMessage = err.message;
+          res.end();
+          return;
+        }
+
+        res.locals.message = err.message;
+        // set locals, only providing error in development
+        res.locals.error = this.config.env.prod ? {} : err;
+
+        // render the error page
+        res.render("error");
       }
-
-      res.locals.message = err.message;
-      // set locals, only providing error in development
-      res.locals.error = this.config.env.prod ? {} : err;
-
-      // render the error page
-      res.render("error");
-    });
+    );
   }
 }
 

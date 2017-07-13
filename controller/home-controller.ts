@@ -1,6 +1,6 @@
 import { interfaces, controller, httpGet } from "inversify-express-utils";
 import { inject, injectable } from "inversify";
-import { Request, Response } from "express"
+import { Request, Response } from "express";
 import BaseContext from "./base-context";
 import User from "../model/user";
 

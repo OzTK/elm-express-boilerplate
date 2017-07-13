@@ -29,14 +29,16 @@ export default class UsersController implements interfaces.Controller {
   protected get(req: Request, res: Response, next: NextFunction): any {
     let ctx = this.searchUsers(req.query.search ? req.query.search : "");
     res.render("users", { context: ctx });
-  };
+  }
 
   private searchUsers(terms: string): UsersContext {
     let context = new UsersContext(terms);
     context.users = this.users;
-    context.filtered = context.search 
-                       ? context.users.filter(u => u.fname === context.search || u.lname === context.search)
-                       : this.users;
+    context.filtered = context.search
+      ? context.users.filter(
+          u => u.fname === context.search || u.lname === context.search
+        )
+      : this.users;
 
     return context;
   }
@@ -50,5 +52,5 @@ class UsersContext extends BaseContext {
   constructor(search: string) {
     super("My Users");
     this.search = search;
-  };
+  }
 }
