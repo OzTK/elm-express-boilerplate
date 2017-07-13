@@ -10,6 +10,9 @@ before_install:
   - npm i -g elm@latest
   - npm i -g snyk@latest
 
+install:
+  - npm install --no-package-lock
+
 script:
   - npm run-script build
   - npm test
