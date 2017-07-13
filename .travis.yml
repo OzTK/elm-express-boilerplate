@@ -1,14 +1,14 @@
 language: node_js
 node_js:
-  - "7"
+  - "8"
 
 env:
   - SNYK_TOKEN="698bcdaf-92de-4a07-bdb7-df4a3fc358b3"
 
 before_install:
-  - npm i -g npm@5
-  - npm i -g elm@0.18
-  - npm i -g snyk
+  - npm i -g npm@latest
+  - npm i -g elm@latest
+  - npm i -g snyk@latest
 
 script:
   - npm run-script build
