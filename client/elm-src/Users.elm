@@ -42,16 +42,16 @@ init flags =
 
 type Msg
     = SearchChanged String
-    | SearchResult UsersService.Msg
+    | SearchResult (WebData (List User))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchChanged s ->
-            ( { model | search = s }, Cmd.map SearchResult <| UsersService.searchUsers s )
+            ( { model | search = s }, UsersService.searchUsers SearchResult s )
 
-        SearchResult (UsersService.GotUsers u) ->
+        SearchResult u ->
             ( { model | users = u }, Cmd.none )
 
 

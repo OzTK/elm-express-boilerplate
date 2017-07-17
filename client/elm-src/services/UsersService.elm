@@ -1,36 +1,27 @@
-module UsersService exposing (Msg(..), loadUsers, searchUsers)
+module UsersService exposing (loadUsers, searchUsers)
 
 import RemoteData.Http as Http
 import Config exposing (config)
 import User exposing (User, userDecoder)
-import Url exposing (url, urlWithParams)
 import Json.Decode exposing (list)
 import RemoteData exposing (WebData)
-
-
--- UPDATE
-
-
-type Msg
-    = GotUsers (WebData (List User))
-
 
 
 -- HTTP
 
 
-loadUsers : Cmd Msg
-loadUsers =
+loadUsers : (WebData (List User) -> msg) -> Cmd msg
+loadUsers msg =
     Http.get
-        (url config.wsUrl "users")
-        GotUsers
+        (Http.url (config.wsUrl ++ "users") [])
+        msg
         (list userDecoder)
 
 
-searchUsers : String -> Cmd Msg
-searchUsers search =
+searchUsers : (WebData (List User) -> msg) -> String -> Cmd msg
+searchUsers msg search =
     Http.getWithConfig
         config.getConfig
-        (urlWithParams config.wsUrl "users" [] [ ( "s", search ) ])
-        GotUsers
+        (Http.url (config.wsUrl ++ "users") [ ( "s", search ) ])
+        msg
         (list userDecoder)
