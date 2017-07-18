@@ -2,8 +2,8 @@
 
 ## Intent
 
-Boilerplate for a client+server nodejs app using:
-- Express as a server framework
+Boilerplate for a client+server multipage elm app using:
+- Express as a web framework
 - TypeScript as the server-side language
 - Elm as the client-side UI language/framework
 - Webpack as bundling tool
@@ -53,7 +53,7 @@ views all lie in the /view folder as .hbs files, as well as a few helpers in the
 - PlaceholderHelper: Allows to define placeholders in a layout view to be replaced in children views by portions of HTML (This is very useful to put script/link tags in the head or at the bottom of the body)
 
 ### IoC and MVC
-[Inversify](http://inversify.io/) is used as an IoC container. [inversify-express-utils](https://github.com/inversify/inversify-express-utils)inversify-express-utils helpers allow clean and simple controllers on top of the usual Express routes.
+[Inversify](http://inversify.io/) is used as an IoC container. [inversify-express-utils](https://github.com/inversify/inversify-express-utils) helpers allow clean and simple controllers on top of the usual Express routes.
 
 ### Client-side
 
