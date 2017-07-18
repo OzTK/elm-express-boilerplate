@@ -1,15 +1,15 @@
 {
     "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
+    "summary": "Test Suites",
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
-        "client/elm-src",
-        "client/elm-src/services",
-        "client/elm-src/models",
-        "client/elm-src/styles",
-        "tests",
-        "tests/view"
+        "../client/elm-src",
+        "../client/elm-src/services",
+        "../client/elm-src/models",
+        "../client/elm-src/styles",
+        ".",
+        "./view"
     ],
     "exposed-modules": [],
     "dependencies": {

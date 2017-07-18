@@ -1,4 +1,20 @@
-module Users exposing (main)
+module Users
+    exposing
+        ( main
+        , view
+        , init
+        , userView
+        , usersView
+        , errorView
+        , errorMessage
+        , searchView
+        , badPayloadErrorMessage
+        , badUrlErrorMessage
+        , networkErrorMessage
+        , timeoutErrorMessage
+        , loadingText
+        , loadInstructionText
+        )
 
 import Html exposing (Html, h1, input, text, ul, li, div, form, label, p)
 import Html.Attributes exposing (attribute, type_, name, placeholder, value)
@@ -12,6 +28,36 @@ import Http
 
 
 -- MODEL
+
+
+badPayloadErrorMessage : String
+badPayloadErrorMessage =
+    "Wrong arguments were used to query the data"
+
+
+badUrlErrorMessage : String -> String
+badUrlErrorMessage url =
+    "This service URL is invalid: " ++ url
+
+
+networkErrorMessage : String
+networkErrorMessage =
+    "Impossible to reach the service. Do you have Internet connectivity?"
+
+
+timeoutErrorMessage : String
+timeoutErrorMessage =
+    "Your request timeout. The server might not be available"
+
+
+loadingText : String
+loadingText =
+    "Loading..."
+
+
+loadInstructionText : String
+loadInstructionText =
+    "Please type a name"
 
 
 type alias Model =
@@ -55,14 +101,23 @@ update msg model =
             ( { model | users = u }, Cmd.none )
 
 
-errorClass : Maybe String -> Html.Attribute msg
-errorClass err =
-    case err of
-        Nothing ->
-            class [ Gone ]
+errorMessage : Http.Error -> String
+errorMessage error =
+    case error of
+        Http.BadStatus err ->
+            err.status.message
 
-        Just error ->
-            class [ Error ]
+        Http.BadPayload _ _ ->
+            badPayloadErrorMessage
+
+        Http.BadUrl u ->
+            badUrlErrorMessage u
+
+        Http.NetworkError ->
+            networkErrorMessage
+
+        Http.Timeout ->
+            timeoutErrorMessage
 
 
 
@@ -97,24 +152,7 @@ userView user =
 errorView : Http.Error -> Html msg
 errorView error =
     p [ class [ Error ] ]
-        [ text
-            (case error of
-                Http.BadStatus err ->
-                    err.status.message
-
-                Http.BadPayload _ _ ->
-                    "Wrong arguments were used to query the data"
-
-                Http.BadUrl u ->
-                    "This service URL is invalid: " ++ u
-
-                Http.NetworkError ->
-                    "Impossible to reach the service. Do you have Internet connectivity?"
-
-                Http.Timeout ->
-                    "Your request timeout. The server might not be available"
-            )
-        ]
+        [ text <| errorMessage error ]
 
 
 usersView : WebData (List User) -> Html Msg
@@ -124,13 +162,13 @@ usersView users =
             ul [ class [ Users ] ] <| List.map userView <| u
 
         Loading ->
-            text "Loading..."
+            text loadingText
 
         Failure err ->
             errorView err
 
         NotAsked ->
-            text "Please type a name"
+            text loadInstructionText
 
 
 view : Model -> Html Msg
