@@ -27,8 +27,9 @@
     "ts": "tsc -p .",
     "css": "elm-css --module=ElmStyleSerializer client/elm-src/styles/ElmStyleSerializer.elm",
     "start": "node ./bin/www",
-    "snk": "snyk test",
-    "test": "npm-run-all snk elm-test"
+    "snyk": "snyk test",
+    "elm-test": "elm-test",
+    "test": "npm-run-all snyk elm-test"
   },
   "dependencies": {
     "body-parser": "~1.17.2",
