@@ -9,6 +9,7 @@ before_install:
   - npm i -g npm@latest
   - npm i -g elm@latest
   - npm i -g snyk@latest
+  - npm i -g elm-test@latest
 
 install:
   - npm install --no-package-lock
