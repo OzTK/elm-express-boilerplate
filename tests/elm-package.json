@@ -8,8 +8,7 @@
         "../client/elm-src/services",
         "../client/elm-src/models",
         "../client/elm-src/styles",
-        ".",
-        "./view"
+        "."
     ],
     "exposed-modules": [],
     "dependencies": {
