@@ -10,7 +10,7 @@ Boilerplate for a client+server multipage elm app using:
 
 The purpose of the project is to have a good balance between a good starting setup, and a simple architecture, with a minimal boilerplate code. I made some opinionated choices, like using NodeJS on the server-side, or using TypeScript. These choices were made from a fullstack developer standpoint, and are not frozen. I'd be happy to find a server-side solution that integrates better with Elm.
 
-**Any advise or help is very welcome to help this project become a very simple, ready-to-go Elm client/server solution. Feel free to create issues/PRs!**
+**Any advise or help is very welcome to help this project become a very simple, ready-to-go Elm client/server nodejs solution. Feel free to create issues/PRs!**
 
 ## Installation
 
@@ -43,9 +43,6 @@ The App class (*app.ts*) holds Express configuration and takes care of gluing to
 
 #### View engine
 Handlebars was chosen as a view engine for its extreme simplicity, performances and built-in integration with Express. It can pretty easily be replaced with another Express' supported view engine.
-
-**--> TODO: Make view engine setup generic to easily allow other engines to be configured**
-**--> Even better: make it usable with [elm-server-side-renderer]("https://github.com/eeue56/elm-server-side-renderer")**
 
 views all lie in the /view folder as .hbs files, as well as a few helpers in the /views/helpers folder:
 - BaseHelper: Defines a base class to ease the creation of new custom helpers
