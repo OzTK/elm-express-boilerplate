@@ -2,7 +2,7 @@ module UsersService exposing (loadUsers, searchUsers)
 
 import RemoteData.Http as Http
 import Config exposing (config)
-import User exposing (User, userDecoder)
+import User exposing (User, user)
 import Json.Decode exposing (list)
 import RemoteData exposing (WebData)
 
@@ -15,7 +15,7 @@ loadUsers msg =
     Http.get
         (Http.url (config.wsUrl ++ "users") [])
         msg
-        (list userDecoder)
+        (list user)
 
 
 searchUsers : (WebData (List User) -> msg) -> String -> Cmd msg
@@ -24,4 +24,4 @@ searchUsers msg search =
         config.getConfig
         (Http.url (config.wsUrl ++ "users") [ ( "s", search ) ])
         msg
-        (list userDecoder)
+        (list user)

@@ -17,7 +17,7 @@ export default class HomeController implements interfaces.Controller {
   public async get(req: Request, res: Response) {
     let ctx = new BaseContext("Home Page");
     ctx.currentPath = req.path;
-    return res.render("index", { context: ctx });
+    return res.render("HomeView", { context: ctx });
   }
 
   @httpGet(HomeController.PATH_OFFLINE)

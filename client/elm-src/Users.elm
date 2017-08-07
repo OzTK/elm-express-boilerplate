@@ -1,7 +1,11 @@
 module Users
     exposing
-        ( main
+        ( Flags
+        , Msg
+        , flags
+        , main
         , view
+        , root
         , init
         , userView
         , usersView
@@ -21,9 +25,11 @@ import Html.Attributes exposing (attribute, type_, name, placeholder, value)
 import Html.Events exposing (onInput)
 import Html.CssHelpers exposing (withNamespace)
 import UsersStyle exposing (..)
-import User exposing (User)
+import User exposing (User, user)
 import UsersService
 import RemoteData exposing (RemoteData(..), WebData)
+import Json.Decode exposing (string, list)
+import Json.Decode.Pipeline exposing (decode, required, optional)
 import Http
 
 
@@ -68,6 +74,13 @@ type alias Flags =
     { users : UserList, search : String }
 
 
+flags : Json.Decode.Decoder Flags
+flags =
+    decode Flags
+        |> required "users" (list user)
+        |> optional "search" string ""
+
+
 type alias UserList =
     List User
 
@@ -95,7 +108,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchChanged s ->
-            ( { model | search = s }, UsersService.searchUsers SearchResult s )
+            ( { model | search = s, users = Loading }, UsersService.searchUsers SearchResult s )
 
         SearchResult u ->
             ( { model | users = u }, Cmd.none )
@@ -128,8 +141,8 @@ errorMessage error =
     withNamespace ""
 
 
-searchView : String -> Html Msg
-searchView searchQuery =
+searchView : (String -> msg) -> String -> Html msg
+searchView msg searchQuery =
     form [ attribute "action" "/users", attribute "autocomplete" "off" ]
         [ div []
             [ input
@@ -137,14 +150,14 @@ searchView searchQuery =
                 , name "search"
                 , placeholder "Search GOT"
                 , value searchQuery
-                , onInput (\s -> SearchChanged s)
+                , onInput msg
                 ]
                 []
             ]
         ]
 
 
-userView : User -> Html Msg
+userView : User -> Html msg
 userView user =
     li [] [ text (user.fname ++ " " ++ user.lname) ]
 
@@ -155,14 +168,14 @@ errorView error =
         [ text <| errorMessage error ]
 
 
-usersView : WebData (List User) -> Html Msg
+usersView : WebData (List User) -> Html msg
 usersView users =
     case users of
         Success u ->
             ul [ class [ Users ] ] <| List.map userView <| u
 
         Loading ->
-            text loadingText
+            p [] [ text loadingText ]
 
         Failure err ->
             errorView err
@@ -171,12 +184,17 @@ usersView users =
             text loadInstructionText
 
 
-view : Model -> Html Msg
-view model =
+root : (String -> msg) -> { a | search : String, users : WebData UserList } -> Html msg
+root onSearchChanged model =
     div []
-        [ searchView model.search
+        [ searchView onSearchChanged model.search
         , usersView model.users
         ]
+
+
+view : Model -> Html Msg
+view model =
+    root SearchChanged model
 
 
 

@@ -4,7 +4,7 @@ import * as favicon from "serve-favicon";
 import {
   errorLogger,
   logger,
-  winstonExpressMiddleware
+  winstonExpressMiddleware,
 } from "winston-express-middleware";
 import { TransportInstance, transports } from "winston";
 import "winston-daily-rotate-file";
@@ -16,14 +16,15 @@ import * as helmet from "helmet";
 import * as cors from "cors";
 import { InversifyExpressServer } from "inversify-express-utils";
 
-import { BaseHelper } from "./views/helpers/base-helper";
 import { BaseCustomMiddleware } from "./middleware/base-custom-middleware";
-import HandlebarsPlaceholderHelper from "./views/helpers/placeholder-helper";
-import HandlebarsJsonHelper from "./views/helpers/json-helper";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
 import { IApp } from "app";
 import getContainer from "./di/container";
 import HttpError from "./http-error";
+import {
+  configure as initElmViewEngine,
+  Options as ElmOptions,
+} from "elm-view-engine";
 
 import * as webpack from "webpack";
 import * as webpackDevMiddleware from "webpack-dev-middleware";
@@ -39,9 +40,7 @@ export default class App implements IApp {
     return this._config;
   }
 
-  constructor(private _config: any) {
-    this.initServer();
-  }
+  constructor(private _config: any) {}
 
   static getInstance(options?: any): IApp {
     if (!App.app) {
@@ -51,44 +50,26 @@ export default class App implements IApp {
     return App.app;
   }
 
-  start(port: string | number): void {
+  async start(port: string | number): Promise<void> {
+    await this.initServer();
     this.server.build().listen(port);
   }
 
-  private initServer(): void {
+  private async initServer(): Promise<void> {
     let app = express();
     app.use(this.setupLogging(LoggingTypes.Http));
 
     let container = getContainer(this.config);
+
+    console.debug("Compiling views...")
+    await initElmViewEngine(
+      new ElmOptions(join(__dirname, "views"), __dirname, app),
+    );
+    console.debug("Done compiling!")
+
     this.server = new InversifyExpressServer(container, null, null, app);
-
-    this.server.setConfig(confApp => {
-      this.initViewEngine(confApp);
-      this.initMiddlewares(confApp);
-    });
-
-    this.server.setErrorConfig(confApp => {
-      this.initErrors(confApp);
-    });
-  }
-
-  private getHandlebarsHelpers(hbs: hbs.HBS): Array<BaseHelper> {
-    // Put your custom handlebars helpers here
-    return [
-      new HandlebarsPlaceholderHelper(hbs),
-      new HandlebarsJsonHelper(hbs)
-    ];
-  }
-
-  private initViewEngine(app: express.Application) {
-    // hbs engine setup
-    app.set("views", join(__dirname, "views"));
-    app.set("view engine", "hbs");
-    const hbsUtils = hbsUtilsFactory(hbs);
-    hbsUtils.registerWatchedPartials(join(__dirname, "views", "partials"));
-    this.getHandlebarsHelpers(hbs).forEach(helper => {
-      helper.register();
-    });
+    this.server.setConfig(this.initMiddlewares.bind(this));
+    this.server.setErrorConfig(this.initErrors.bind(this));
   }
 
   private getCustomMiddlewares(): Array<BaseCustomMiddleware> {
@@ -115,7 +96,7 @@ export default class App implements IApp {
   }
 
   private setupLogging(
-    loggingType: LoggingTypes
+    loggingType: LoggingTypes,
   ): express.RequestHandler | express.ErrorRequestHandler {
     let transport: TransportInstance;
 
@@ -143,7 +124,7 @@ export default class App implements IApp {
       fs.existsSync(dir) || fs.mkdirSync(dir);
       transport = new transports.DailyRotateFile({
         filename: join(dir, fname),
-        datePattern: "_yyyy-MM-dd.txt"
+        datePattern: "_yyyy-MM-dd.txt",
       });
     } else {
       transport = new transports.Console({ colorize: true });
@@ -160,14 +141,14 @@ export default class App implements IApp {
     app.use(
       webpackDevMiddleware(compiler, {
         publicPath: wpConfig.output.publicPath,
-        stats: { colors: true }
-      })
+        stats: { colors: true },
+      }),
     );
     app.use(
       webpackHotMiddleware(compiler, {
         path: "/__webpack_hmr",
-        heartbeat: 10 * 1000
-      })
+        heartbeat: 10 * 1000,
+      }),
     );
   }
 
@@ -186,7 +167,7 @@ export default class App implements IApp {
         err: any,
         req: express.Request,
         res: express.Response,
-        next: express.NextFunction
+        next: express.NextFunction,
       ) => {
         res.status(err.status || 500);
 
@@ -196,18 +177,18 @@ export default class App implements IApp {
           return;
         }
 
-        res.locals.message = err.message;
+        res.locals.message = "Impossible to access this page";
         // set locals, only providing error in development
         res.locals.error = this.config.env.prod ? {} : err;
 
         // render the error page
-        res.render("error");
-      }
+        res.render("ErrorView");
+      },
     );
   }
 }
 
 const enum LoggingTypes {
   Http,
-  Error
+  Error,
 }

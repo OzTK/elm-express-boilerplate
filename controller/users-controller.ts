@@ -28,14 +28,13 @@ export default class UsersController implements interfaces.Controller {
   @httpGet(UsersController.PATH_ROOT)
   protected get(req: Request, res: Response, next: NextFunction): any {
     let ctx = this.searchUsers(req.query.search ? req.query.search : "");
-    res.render("users", { context: ctx });
+    res.render("UsersView", { context: ctx });
   }
 
   private searchUsers(terms: string): UsersContext {
     let context = new UsersContext(terms);
-    context.users = this.users;
-    context.filtered = context.search
-      ? context.users.filter(
+    context.users = context.search
+      ? this.users.filter(
           u => u.fname === context.search || u.lname === context.search
         )
       : this.users;
@@ -46,7 +45,6 @@ export default class UsersController implements interfaces.Controller {
 
 class UsersContext extends BaseContext {
   users: Array<User>;
-  filtered: Array<User>;
   search: string;
 
   constructor(search: string) {

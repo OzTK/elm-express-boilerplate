@@ -15,7 +15,7 @@
       "reflect-metadata"
     ],
     "allowJs": false,
-    "typeRoots": [ "@types", "types" ],
+    "typeRoots": [ "@types", "./types" ],
     "baseUrl": "types"
   },
   "exclude": [

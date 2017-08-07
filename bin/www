@@ -7,4 +7,4 @@ if (process.env.HOT) {
 }
 
 let app = MyApp.getInstance(conf);
-app.start(process.env.PORT || '3000')
+app.start(process.env.PORT || '3000');
