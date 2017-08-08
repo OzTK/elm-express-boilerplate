@@ -27,9 +27,3 @@ export default class HomeController implements interfaces.Controller {
     return res.render("offline", { context: ctx });
   }
 }
-
-class HomeContext extends BaseContext {
-  constructor() {
-    super("My Friends");
-  }
-}

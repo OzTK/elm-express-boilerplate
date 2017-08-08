@@ -1,0 +1,4 @@
+{
+  "appName": "elm-express-boilerplate (DEBUG)",
+  "env": { "prod": false, "hot": false, "port": 3000, "url": "http://localhost" }
+}

@@ -10,18 +10,27 @@ import RemoteData exposing (WebData)
 -- HTTP
 
 
-loadUsers : (WebData (List User) -> msg) -> Cmd msg
-loadUsers msg =
+loadUsers : String -> (WebData (List User) -> msg) -> Cmd msg
+loadUsers domain msg =
     Http.get
-        (Http.url (config.wsUrl ++ "users") [])
+        (Http.url (endpoint domain "users") [])
         msg
         (list user)
 
 
-searchUsers : (WebData (List User) -> msg) -> String -> Cmd msg
-searchUsers msg search =
+searchUsers : String -> (WebData (List User) -> msg) -> String -> Cmd msg
+searchUsers domain msg search =
     Http.getWithConfig
         config.getConfig
-        (Http.url (config.wsUrl ++ "users") [ ( "s", search ) ])
+        (Http.url (endpoint domain "users") [ ( "s", search ) ])
         msg
         (list user)
+
+
+
+-- Utils
+
+
+endpoint : String -> String -> String
+endpoint domain resource =
+    domain ++ config.apiPath ++ resource

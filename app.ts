@@ -29,6 +29,7 @@ import {
 import * as webpack from "webpack";
 import * as webpackDevMiddleware from "webpack-dev-middleware";
 import * as webpackHotMiddleware from "webpack-hot-middleware";
+import * as config from "config";
 
 export default class App implements IApp {
   private static readonly logDirectory = join(__dirname, "log");
@@ -36,15 +37,9 @@ export default class App implements IApp {
 
   private server: InversifyExpressServer;
 
-  public get config(): any {
-    return this._config;
-  }
-
-  constructor(private _config: any) {}
-
-  static getInstance(options?: any): IApp {
+  static getInstance(): IApp {
     if (!App.app) {
-      App.app = new App(options);
+      App.app = new App();
     }
 
     return App.app;
@@ -59,7 +54,7 @@ export default class App implements IApp {
     let app = express();
     app.use(this.setupLogging(LoggingTypes.Http));
 
-    let container = getContainer(this.config);
+    let container = getContainer();
 
     console.debug("Compiling views...")
     await initElmViewEngine(
@@ -85,7 +80,7 @@ export default class App implements IApp {
       .use(cors())
       .use(express.static(join(__dirname, "public")));
 
-    if (this.config.env.hot) {
+    if (config.get("env.hot")) {
       this.initHMR(app);
     }
 
@@ -100,7 +95,7 @@ export default class App implements IApp {
   ): express.RequestHandler | express.ErrorRequestHandler {
     let transport: TransportInstance;
 
-    if (this.config.env.prod) {
+    if (config.get("env.prod")) {
       let fname: string;
       let dname: string;
 
@@ -137,7 +132,7 @@ export default class App implements IApp {
   }
 
   private initHMR(app: express.Application) {
-    const wpConfig = require("./webpack.config.js")(this.config.env);
+    const wpConfig = require("./webpack.config.js")(config.get("env"));
     const compiler = webpack(wpConfig);
     app.use(
       webpackDevMiddleware(compiler, {
@@ -180,7 +175,7 @@ export default class App implements IApp {
 
         res.locals.message = "Impossible to access this page";
         // set locals, only providing error in development
-        res.locals.error = this.config.env.prod ? null : err;
+        res.locals.error = config.get("env.prod") ? null : err;
 
         // rendering the error page
         res.render("ErrorView");

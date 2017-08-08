@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 let MyApp = require('../app').default;
-const conf = process.env.NODE_ENV === 'production' ? require("../config.json") : require("../config.dev.json");
+const conf = require('config');
 
 if (process.env.HOT) {
   conf.env.hot = true;
 }
 
 let app = MyApp.getInstance(conf);
-app.start(process.env.PORT || '3000');
+app.start(conf.port || process.env.PORT || '3000');

@@ -6,7 +6,7 @@ import UsersRestController from "../rest/v1/users-rest-controller";
 import HomeController from "../controller/home-controller";
 import UsersController from "../controller/users-controller";
 
-function getContainer(config: any): Container {
+function getContainer(): Container {
   const container = new Container();
 
   container

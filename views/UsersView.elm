@@ -17,7 +17,7 @@ view msg jsonCtx =
 
 users : msg -> JE.Value -> ViewContext Users.Flags -> Html msg
 users msg jsonCtx c =
-    Users.root (\_ -> msg) { search = c.context.search, users = Success c.context.users }
+    Users.root (\_ -> msg) { search = c.context.search, url = c.context.url, users = Success c.context.users }
         |> flip (::) []
         |> div [ id "app" ]
         |> Layout.view (head c) (bottom jsonCtx c) c.assets

@@ -67,17 +67,18 @@ loadInstructionText =
 
 
 type alias Model =
-    { users : WebData UserList, search : String, errorMessage : Maybe String }
+    { users : WebData UserList, url : String, search : String, errorMessage : Maybe String }
 
 
 type alias Flags =
-    { users : UserList, search : String }
+    { users : UserList, url : String, search : String }
 
 
 flags : Json.Decode.Decoder Flags
 flags =
     decode Flags
         |> required "users" (list user)
+        |> required "url" string
         |> optional "search" string ""
 
 
@@ -90,6 +91,7 @@ init flags =
     ( { users = Success flags.users
       , search = flags.search
       , errorMessage = Nothing
+      , url = flags.url
       }
     , Cmd.none
     )
@@ -108,7 +110,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SearchChanged s ->
-            ( { model | search = s, users = Loading }, UsersService.searchUsers SearchResult s )
+            ( { model | search = s, users = Loading }, UsersService.searchUsers model.url SearchResult s )
 
         SearchResult u ->
             ( { model | users = u }, Cmd.none )
@@ -184,7 +186,7 @@ usersView users =
             text loadInstructionText
 
 
-root : (String -> msg) -> { a | search : String, users : WebData UserList } -> Html msg
+root : (String -> msg) -> { a | search : String, url : String, users : WebData UserList } -> Html msg
 root onSearchChanged model =
     div []
         [ searchView onSearchChanged model.search
