@@ -1,7 +1,7 @@
 module Users
     exposing
         ( Flags
-        , Msg
+        , Msg(..)
         , flags
         , main
         , view

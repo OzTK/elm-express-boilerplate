@@ -58,12 +58,12 @@ suiteUI =
         , describe "searchView"
             [ test "has top level form with no autocomplete and pointing to /users" <|
                 \_ ->
-                    searchView ""
+                    searchView SearchChanged ""
                         |> Query.fromHtml
                         |> Query.has [ attribute "action" "/users", attribute "autocomplete" "off" ]
             , fuzz string "has the right input search field with query inside and placeholder" <|
                 \search ->
-                    searchView search
+                    searchView SearchChanged search
                         |> Query.fromHtml
                         |> Query.find
                             [ tag "input"

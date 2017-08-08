@@ -55,7 +55,7 @@
     "@types/elm": "^0.12.29",
     "@types/extract-text-webpack-plugin": "^2.0.0",
     "@types/handlebars": "^4.0.35",
-    "@types/helmet": "0.0.35",
+    "@types/helmet": "0.0.36",
     "@types/morgan": "^1.7.32",
     "@types/serve-favicon": "^2.2.28",
     "@types/webpack": "^3.0.6",
@@ -75,7 +75,7 @@
     "style-loader": "^0.18.2",
     "ts-loader": "^2.3.2",
     "typescript": "^2.4.2",
-    "webpack": "^3.4.1",
+    "webpack": "^3.5.1",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.18.2",
     "webpack-sources": "^1.0.1"
