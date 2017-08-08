@@ -15,5 +15,5 @@ install:
   - npm install --no-package-lock
 
 script:
-  - npm run-script build
+  - travis_retry npm run-script build
   - npm test
