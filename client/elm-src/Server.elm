@@ -21,7 +21,7 @@ type alias ViewContext c =
 
 
 type alias Assets =
-    { shared : Asset, users : Asset, manifest : Asset }
+    { users : Asset, home : Asset, manifest : Asset, error : Asset }
 
 
 asset : Decoder Asset
@@ -34,9 +34,10 @@ asset =
 assets : Decoder Assets
 assets =
     decode Assets
-        |> required "shared" asset
         |> required "users" asset
+        |> required "home" asset
         |> required "manifest" asset
+        |> required "error" asset
 
 
 assetsFromValue : JE.Value -> Result String Assets

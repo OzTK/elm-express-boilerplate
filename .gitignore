@@ -5,3 +5,4 @@ public/stylesheets
 *.js
 *.js.map
 webpack-assets.json
+log

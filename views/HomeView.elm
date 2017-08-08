@@ -3,8 +3,9 @@ module HomeView exposing (view)
 import Json.Encode as JE
 import Json.Decode.Pipeline exposing (decode, required)
 import Json.Decode exposing (Decoder, string)
-import Html exposing (Html, h1, text)
-import Server exposing (ViewContext)
+import Html exposing (Html, h1, div, img, text, node)
+import Html.Attributes exposing (href, rel, src, alt)
+import Server exposing (ViewContext, Assets)
 import Layout
 
 
@@ -32,5 +33,28 @@ view msg jsonCtx =
 
 home : ViewContext TitleContext -> Html msg
 home ctx =
-    h1 [] [ text ctx.context.title ]
-        |> Layout.view [] [] ctx.assets
+    div []
+        [ h1 [] [ text ctx.context.title ]
+        , img [ alt "ELM", src "/images/elm.png" ] []
+        ]
+        |> Layout.view (head ctx.assets) (bottom ctx.assets) ctx.assets
+
+
+head : Assets -> List (Html msg)
+head assets =
+    case assets.home.css of
+        Just css ->
+            [ node "link" [ rel "stylesheet", href css ] [] ]
+
+        Nothing ->
+            []
+
+
+bottom : Assets -> List (Html msg)
+bottom assets =
+    case assets.home.js of
+        Just js ->
+            [ node "script" [ src js ] [] ]
+
+        Nothing ->
+            []

@@ -45,6 +45,7 @@ css =
                 [ li
                     [ (display inlineBlock) |> important
                     , color primaryAccentColor
+                    , marginRight (px 4)
                     ]
                 ]
             ]

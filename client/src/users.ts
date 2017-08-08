@@ -1,6 +1,6 @@
-declare var context: any;
+import "../elm-src/styles/UsersStylesheets";
 
-import "../styles/users.css";
+declare var context: any;
 
 const ElmUsers = require("../elm-src/Users.elm");
 ElmUsers.Users.embed(document.getElementById("app"), context);

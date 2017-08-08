@@ -30,7 +30,6 @@ view head bottom assets content =
              , node "meta" [ name "viewport", Html.Attributes.content "width=device-width, initial-scale=1" ] []
              , node "title" [] [ text "OMG it works!!!" ]
              ]
-                |> andThen assets.shared.css
             )
                 ++ head
         , body [ id MainStyle.Page ] <|
@@ -44,7 +43,6 @@ view head bottom assets content =
              , div [ class [ MainStyle.Card ] ] [ content ]
              ]
                 |> andThen assets.manifest.js
-                |> andThen assets.shared.js
             )
                 ++ bottom
         ]

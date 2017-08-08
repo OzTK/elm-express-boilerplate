@@ -4,8 +4,9 @@ import Json.Encode as JE
 import Regex exposing (replace, regex, HowMany(All))
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Decode exposing (Decoder, decodeValue, string, nullable, int)
-import Html exposing (Html, h1, h2, h3, p, div, text)
-import Server exposing (ViewContext)
+import Html exposing (Html, h1, h2, h3, p, div, text, node)
+import Html.Attributes exposing (href, rel, src)
+import Server exposing (ViewContext, Assets)
 import Layout
 
 
@@ -71,4 +72,24 @@ displayError err =
          ]
             ++ internalError err
         )
-        |> Layout.view [] [] err.assets
+        |> Layout.view (head err.assets) (bottom err.assets) err.assets
+
+
+head : Assets -> List (Html msg)
+head assets =
+    case assets.error.css of
+        Just css ->
+            [ node "link" [ rel "stylesheet", href css ] [] ]
+
+        Nothing ->
+            []
+
+
+bottom : Assets -> List (Html msg)
+bottom assets =
+    case assets.error.js of
+        Just js ->
+            [ node "script" [ src js ] [] ]
+
+        Nothing ->
+            []

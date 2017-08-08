@@ -18,7 +18,7 @@ css =
         [ class Users
             [ children
                 [ li
-                    [ color primaryAccentColor
+                    [ color primaryColor
                     ]
                 ]
             ]

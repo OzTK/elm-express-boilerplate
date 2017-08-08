@@ -181,7 +181,7 @@ export default class App implements IApp {
         // set locals, only providing error in development
         res.locals.error = this.config.env.prod ? {} : err;
 
-        // render the error page
+        // rendering the error page
         res.render("ErrorView");
       },
     );
