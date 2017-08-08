@@ -120,6 +120,7 @@ export default class App implements IApp {
           break;
       }
 
+      fs.existsSync(App.logDirectory) || fs.mkdirSync(App.logDirectory);
       const dir = join(App.logDirectory, dname);
       fs.existsSync(dir) || fs.mkdirSync(dir);
       transport = new transports.DailyRotateFile({
@@ -179,7 +180,7 @@ export default class App implements IApp {
 
         res.locals.message = "Impossible to access this page";
         // set locals, only providing error in development
-        res.locals.error = this.config.env.prod ? {} : err;
+        res.locals.error = this.config.env.prod ? null : err;
 
         // rendering the error page
         res.render("ErrorView");
