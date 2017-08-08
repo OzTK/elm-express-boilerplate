@@ -17,6 +17,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "install": "elm-package install",
     "build": "npm-run-all ts wp-prod",
     "dev": "npm-run-all ts wp",
     "hot": "npm-run-all ts wp-hot",
