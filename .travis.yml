@@ -15,8 +15,8 @@ install:
   - npm install --no-package-lock
 
 script:
-  - travis_retry travis_wait npm run-script build
-  - travis_retry travis_wait npm test
+  - travis_wait npm run-script build
+  - travis_wait npm test
 
 deploy:
   provider: heroku

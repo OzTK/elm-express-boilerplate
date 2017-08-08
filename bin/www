@@ -2,9 +2,5 @@
 let MyApp = require('../app').default;
 const conf = require('config');
 
-if (process.env.HOT) {
-  conf.env.hot = true;
-}
-
-let app = MyApp.getInstance(conf);
-app.start(conf.port || process.env.PORT || '3000');
+let app = MyApp.getInstance();
+app.start(conf.get("env.port") || process.env.PORT || '3000');
