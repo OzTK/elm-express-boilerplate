@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-let MyApp = require('../app').default;
+let MyApp = require('./app').default;
 const conf = require('config');
 
 let app = MyApp.getInstance();

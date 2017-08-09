@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "es2015",
+    "outDir": "bin",
     "lib": [
       "es6",
       "dom"
@@ -21,7 +22,9 @@
   "exclude": [
     "node_modules",
     "elm-stuff",
-    "public"
+    "public",
+    "client",
+    "webpack.config.js"
   ],
   "compileOnSave": true
 }

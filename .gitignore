@@ -6,3 +6,4 @@ public/stylesheets
 *.js.map
 webpack-assets.json
 log
+bin

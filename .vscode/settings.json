@@ -9,10 +9,10 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "**/node_modules": true,
-        "**/elm-stuff": true,
-        "**/.vscode": true,
-        "**/*.js": { "when": "$(basename).ts" },
-        "**/*.js.map": { "when": "$(basename)" }
+        // "**/node_modules": true,
+        // "**/elm-stuff": true,
+        "**/.vscode": true
+        // "**/*.js": { "when": "$(basename).ts" },
+        // "**/*.js.map": { "when": "$(basename)" }
     }
 }
