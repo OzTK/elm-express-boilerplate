@@ -17,7 +17,7 @@ install:
   - snyk test
 
 script:
-  - npm run dev
+  - npm run build
   - npm test
 
 after_success:
