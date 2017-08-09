@@ -114,7 +114,7 @@ suiteUI =
         , describe "main view"
             [ test "has a root div" <|
                 \_ ->
-                    view (Tuple.first (init { search = "", users = [] }))
+                    view (Tuple.first (init { search = "", url = "", users = [] }))
                         |> Query.fromHtml
                         |> Query.has [ tag "div" ]
             ]

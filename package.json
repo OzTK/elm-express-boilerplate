@@ -27,9 +27,8 @@
     "wp-hot": "webpack --progress --env.hot",
     "ts": "tsc -p .",
     "start": "node ./bin/www",
-    "snyk": "snyk test",
     "elm-test": "elm-test",
-    "test": "npm-run-all snyk elm-test"
+    "test": "elm-test"
   },
   "dependencies": {
     "body-parser": "~1.17.2",
