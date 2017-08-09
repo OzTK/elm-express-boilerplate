@@ -15,7 +15,7 @@ install:
   - npm install --no-package-lock
 
 script:
-  - travis_wait npm run-script build
+  - npm run-script build
   - travis_wait npm test
 
 deploy:
