@@ -9,6 +9,10 @@ before_install:
   - npm i -g elm-test@latest
 
 install:
+  - elm-package install --yes
+  - cd tests
+  - elm-package install --yes
+  - cd ..
   - npm install --no-package-lock
   - snyk test
 
