@@ -143,6 +143,15 @@ errorMessage error =
     withNamespace ""
 
 
+{-| View allowing to search for a user through a textbox.
+
+    searchView OnSearchInputMsg "my search" ==
+    <form action="/users" autocomplete="off">
+        <div>
+            <input type="search" name="search" placeholder="Search GOT" value="my search" />
+        </div>
+    </form>
+-}
 searchView : (String -> msg) -> String -> Html msg
 searchView msg searchQuery =
     form [ attribute "action" "/users", attribute "autocomplete" "off" ]
@@ -159,6 +168,10 @@ searchView msg searchQuery =
         ]
 
 
+{-| Individual user view.
+
+    userView { fname = John, lname = "Doe", age = 15 } == <li>John Doe</li>
+-}
 userView : User -> Html msg
 userView user =
     li [] [ text (user.fname ++ " " ++ user.lname) ]
