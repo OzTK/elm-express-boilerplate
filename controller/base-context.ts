@@ -12,6 +12,12 @@ export default class BaseContext {
   constructor(public readonly title: string) {
     this.appName = config.get("appName");
     this.prod = config.get("env.production");
-    this.url = config.get<string>("env.url") + ":" + config.get<string>("env.port");
+
+    const url = config.get<string>("env.url");
+    if (!url.startsWith("http")) {
+      this.url = "http://";
+    }
+    
+    this.url += url + ":" + config.get<string>("env.port");
   }
 }

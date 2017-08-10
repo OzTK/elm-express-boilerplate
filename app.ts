@@ -6,7 +6,7 @@ import {
   logger,
   winstonExpressMiddleware,
 } from "winston-express-middleware";
-import { TransportInstance, transports } from "winston";
+import { TransportInstance, transports, log } from "winston";
 import "winston-daily-rotate-file";
 import * as fs from "fs";
 import { json, urlencoded } from "body-parser";
@@ -50,9 +50,11 @@ export default class App implements IApp {
 
   constructor(@inject(TYPES.HotModuleReloading) private readonly hmr?: HotModuleReloading) {}
 
-  async start(port: string | number): Promise<void> {
+  async start(port: number, url: string): Promise<void> {
     await this.initServer();
-    this.server.build().listen(port);
+    this.server.build().listen(port, url, () => {
+      log("info", "Server started at %s on port %d", url, port);
+    });
   }
 
   private async initServer(): Promise<void> {

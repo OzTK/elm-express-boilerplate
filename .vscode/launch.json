@@ -11,7 +11,9 @@
             "program": "${workspaceRoot}/bin/www",
             "cwd": "${workspaceRoot}/bin",
             "env": {
-                "NODE_ENV": "development"
+                "NODE_ENV": "development",
+                "PORT": 5000,
+                "URL": "localhost"
             }
         },
         {
@@ -21,7 +23,9 @@
             "program": "${workspaceRoot}/bin/www",
             "cwd": "${workspaceRoot}/bin",
             "env": {
-                "NODE_ENV": "production"
+                "NODE_ENV": "production",
+                "PORT": 5000,
+                "URL": "localhost"
             }
         },
         {
@@ -32,7 +36,9 @@
             "cwd": "${workspaceRoot}/bin",
             "env": {
                 "HOT": "true",
-                "NODE_ENV": "development"
+                "NODE_ENV": "development",
+                "PORT": 5000,
+                "URL": "localhost"
             }
         }
     ]
