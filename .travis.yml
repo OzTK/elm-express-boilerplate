@@ -9,9 +9,9 @@ before_install:
   - npm i -g elm-test@latest
 
 install:
-  - elm-make --yes
+  - travis_retry travis_wait elm-make --yes
   - cd tests
-  - elm-make --yes
+  - travis_retry travis_wait elm-make --yes
   - cd ..
   - npm install
   - snyk test
