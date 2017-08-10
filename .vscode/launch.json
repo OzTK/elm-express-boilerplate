@@ -9,6 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceRoot}/bin/www",
+            "cwd": "${workspaceRoot}/bin",
             "env": {
                 "NODE_ENV": "development"
             }
@@ -18,6 +19,7 @@
             "request": "launch",
             "name": "Run",
             "program": "${workspaceRoot}/bin/www",
+            "cwd": "${workspaceRoot}/bin",
             "env": {
                 "NODE_ENV": "production"
             }
@@ -27,6 +29,7 @@
             "request": "launch",
             "name": "Live debug",
             "program": "${workspaceRoot}/bin/www",
+            "cwd": "${workspaceRoot}/bin",
             "env": {
                 "HOT": "true",
                 "NODE_ENV": "development"

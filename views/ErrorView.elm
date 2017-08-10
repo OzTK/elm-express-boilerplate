@@ -14,17 +14,18 @@ import Layout
 
 
 type alias Error =
-    { status : Int, message : String, stacktrace : String }
+    { code : Maybe String, status : Maybe Int, message : String, stacktrace : String }
 
 
 type alias ErrorContext =
-    { message : String, error : Maybe Error, assets : Server.Assets }
+    { message : String, error : Maybe Error, assets : Maybe Server.Assets }
 
 
 error : Decoder Error
 error =
     decode Error
-        |> required "status" int
+        |> optional "code" (nullable string) Nothing
+        |> optional "status" (nullable int) Nothing
         |> required "message" string
         |> required "stack" string
 
@@ -34,7 +35,7 @@ errorContext =
     decode ErrorContext
         |> required "message" string
         |> required "error" (nullable error)
-        |> required "assets" Server.assets
+        |> optional "assets" (nullable Server.assets) Nothing
 
 
 
@@ -75,21 +76,17 @@ displayError err =
         |> Layout.view (head err.assets) (bottom err.assets) err.assets
 
 
-head : Assets -> List (Html msg)
+head : Maybe Assets -> List (Html msg)
 head assets =
-    case assets.error.css of
-        Just css ->
-            [ node "link" [ rel "stylesheet", href css ] [] ]
-
-        Nothing ->
-            []
+    assets
+        |> Maybe.andThen (\a -> a.error.css)
+        |> Maybe.map (\css -> [ node "link" [ rel "stylesheet", href css ] [] ])
+        |> Maybe.withDefault []
 
 
-bottom : Assets -> List (Html msg)
+bottom : Maybe Assets -> List (Html msg)
 bottom assets =
-    case assets.error.js of
-        Just js ->
-            [ node "script" [ src js ] [] ]
-
-        Nothing ->
-            []
+    assets
+        |> Maybe.andThen (\a -> a.error.js)
+        |> Maybe.map (\js -> [ node "script" [ src js ] [] ])
+        |> Maybe.withDefault []

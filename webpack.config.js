@@ -5,6 +5,10 @@ var AssetsPlugin = require("assets-webpack-plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = (env) => {
+  if (!env) {
+    env = {};
+  }
+
   let cssName = "[name].css";
   let jsName = "[name].js";
 

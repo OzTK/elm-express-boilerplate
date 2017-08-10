@@ -18,7 +18,7 @@ import MainStyle
 view :
     List (Html.Html msg)
     -> List (Html.Html msg)
-    -> Assets
+    -> Maybe Assets
     -> Html.Html msg
     -> Html.Html msg
 view head bottom assets content =
@@ -32,24 +32,31 @@ view head bottom assets content =
              ]
             )
                 ++ head
-        , body [ id MainStyle.Page ] <|
-            ([ header []
-                [ h3 [] [ text "elm-express-boilerplate" ]
-                , ul [ class [ MainStyle.NavBar ] ]
-                    [ li [] [ a [ href "/" ] [ text "Home" ] ]
-                    , li [] [ a [ href "/users" ] [ text "Users" ] ]
-                    ]
-                ]
-             , div [ class [ MainStyle.Card ] ] [ content ]
-             ]
-                |> andThen assets.manifest.js
-            )
+        , body [ id MainStyle.Page ]
+            ((assets
+                |> Maybe.andThen (\a -> a.manifest.js)
+                |> andThen (body_ content)
+             )
                 ++ bottom
+            )
         ]
 
 
-andThen : Maybe String -> List (Html msg) -> List (Html msg)
-andThen asset l =
+body_ : Html msg -> List (Html msg)
+body_ content =
+    [ header []
+        [ h3 [] [ text "elm-express-boilerplate" ]
+        , ul [ class [ MainStyle.NavBar ] ]
+            [ li [] [ a [ href "/" ] [ text "Home" ] ]
+            , li [] [ a [ href "/users" ] [ text "Users" ] ]
+            ]
+        ]
+    , div [ class [ MainStyle.Card ] ] [ content ]
+    ]
+
+
+andThen : List (Html msg) -> Maybe String -> List (Html msg)
+andThen l asset =
     case ( asset, Maybe.map (String.endsWith ".js") asset ) of
         ( Just js, Just True ) ->
             l ++ [ node "script" [ src js ] [] ]

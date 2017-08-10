@@ -11,7 +11,7 @@ export default class BaseContext {
 
   constructor(public readonly title: string) {
     this.appName = config.get("appName");
-    this.prod = config.get("env.prod");
+    this.prod = config.get("env.production");
     this.url = config.get<string>("env.url") + ":" + config.get<string>("env.port");
   }
 }

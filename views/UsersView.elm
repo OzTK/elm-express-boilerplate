@@ -20,7 +20,7 @@ users msg jsonCtx c =
     Users.root (\_ -> msg) { search = c.context.search, url = c.context.url, users = Success c.context.users }
         |> flip (::) []
         |> div [ id "app" ]
-        |> Layout.view (head c) (bottom jsonCtx c) c.assets
+        |> Layout.view (head c) (bottom jsonCtx c) (Just c.assets)
 
 
 head : ViewContext Users.Flags -> List (Html msg)

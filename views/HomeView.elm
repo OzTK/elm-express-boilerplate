@@ -37,7 +37,7 @@ home ctx =
         [ h1 [] [ text ctx.context.title ]
         , img [ alt "ELM", src "/images/elm.png" ] []
         ]
-        |> Layout.view (head ctx.assets) (bottom ctx.assets) ctx.assets
+        |> Layout.view (head ctx.assets) (bottom ctx.assets) (Just ctx.assets)
 
 
 head : Assets -> List (Html msg)

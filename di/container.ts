@@ -1,7 +1,11 @@
 import "reflect-metadata";
 
+import * as config from "config";
+import TYPES from "./types";
 import { Container } from "inversify";
 import { interfaces, TYPE } from "inversify-express-utils";
+import HotModuleReloading from "./hot-module-reloading";
+import WebpackHotModuleReloading from "../webpack-hot-module-reloading";
 import UsersRestController from "../rest/v1/users-rest-controller";
 import HomeController from "../controller/home-controller";
 import UsersController from "../controller/users-controller";
@@ -21,6 +25,12 @@ function getContainer(): Container {
     .bind<interfaces.Controller>(TYPE.Controller)
     .to(UsersRestController)
     .whenTargetNamed(UsersRestController.TAG);
+
+  if (config.get("env.hot")) {
+    container
+      .bind<HotModuleReloading>(TYPES.HotModuleReloading)
+      .to(WebpackHotModuleReloading);
+  }
 
   return container;
 }

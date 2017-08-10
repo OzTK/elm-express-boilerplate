@@ -1,4 +1,4 @@
 {
   "appName": "elm-express-boilerplate",
-  "env": { "prod": true, "hot": false, "port": 80, "url": "https://elm-express-boilerplate.herokuapp.com" }
+  "env": { "production": true, "hot": false, "port": 80, "url": "https://elm-express-boilerplate.herokuapp.com" }
 }

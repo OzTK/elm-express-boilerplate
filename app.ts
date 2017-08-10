@@ -14,7 +14,9 @@ import * as hbs from "hbs";
 import * as hbsUtilsFactory from "hbs-utils";
 import * as helmet from "helmet";
 import * as cors from "cors";
+import { inject } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
+import TYPES from "./di/types";
 
 import { BaseCustomMiddleware } from "./middleware/base-custom-middleware";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
@@ -25,6 +27,7 @@ import {
   configure as initElmViewEngine,
   Options as ElmOptions,
 } from "elm-view-engine";
+import HotModuleReloading from "./di/hot-module-reloading";
 
 import * as webpack from "webpack";
 import * as webpackDevMiddleware from "webpack-dev-middleware";
@@ -44,6 +47,8 @@ export default class App implements IApp {
 
     return App.app;
   }
+
+  constructor(@inject(TYPES.HotModuleReloading) private readonly hmr?: HotModuleReloading) {}
 
   async start(port: string | number): Promise<void> {
     await this.initServer();
@@ -80,8 +85,8 @@ export default class App implements IApp {
       .use(cors())
       .use(express.static(join(__dirname, "public")));
 
-    if (config.get("env.hot")) {
-      this.initHMR(app);
+    if (this.hmr) {
+      this.hmr.setup(app);
     }
 
     // Custom middlewares
@@ -95,7 +100,7 @@ export default class App implements IApp {
   ): express.RequestHandler | express.ErrorRequestHandler {
     let transport: TransportInstance;
 
-    if (config.get("env.prod")) {
+    if (config.get("env.production")) {
       let fname: string;
       let dname: string;
 
@@ -131,23 +136,6 @@ export default class App implements IApp {
       : errorLogger({ transports: [transport] });
   }
 
-  private initHMR(app: express.Application) {
-    const wpConfig = require("./webpack.config.js")(config.get("env"));
-    const compiler = webpack(wpConfig);
-    app.use(
-      webpackDevMiddleware(compiler, {
-        publicPath: wpConfig.output.publicPath,
-        stats: { colors: true },
-      }),
-    );
-    app.use(
-      webpackHotMiddleware(compiler, {
-        path: "/__webpack_hmr",
-        heartbeat: 10 * 1000,
-      }),
-    );
-  }
-
   private initErrors(app: express.Application) {
     app.use((req, res, next) => {
       const err = new HttpError(404, "This url does not exist");
@@ -175,7 +163,7 @@ export default class App implements IApp {
 
         res.locals.message = "Impossible to access this page";
         // set locals, only providing error in development
-        res.locals.error = config.get("env.prod") ? null : err;
+        res.locals.error = config.get("env.production") ? null : err;
 
         // rendering the error page
         res.render("ErrorView");

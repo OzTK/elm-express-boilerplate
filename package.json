@@ -19,8 +19,10 @@
   "scripts": {
     "clean": "rimraf bin",
     "build": "npm-run-all ts wp-prod",
-    "postbuild": "copyfiles 'public/**/*' www elm-package.json config/* 'elm-stuff/**/*' webpack.config.js package.json views/* 'client/**/*' bin",
-    "dev": "npm-run-all ts wp",
+    "build:dev": "npm-run-all ts wp",
+    "postbuild": "npm run copy",
+    "postbuild:dev": "npm run copy",
+    "copy": "copyfiles 'public/**/*' www elm-package.json webpack-assets.json config/* 'elm-stuff/**/*' webpack.config.js package.json views/* 'client/**/*' bin",
     "hot": "npm-run-all ts wp-hot",
     "client": "npm-run-all wp",
     "wp": "webpack --progress",
