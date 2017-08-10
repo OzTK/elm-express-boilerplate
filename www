@@ -5,5 +5,4 @@ const conf = require("config");
 const app = MyApp.getInstance();
 app.start(
   process.env.PORT || conf.get("env.port") || "3000",
-  process.env.URL || conf.get("env.url") || "localhost"
-);
+  process.env.URL || conf.get("env.url") || "localhost");
