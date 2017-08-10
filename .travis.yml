@@ -22,6 +22,8 @@ script:
 
 after_success:
   - snyk monitor
+  
+before_deploy:
   - cd bin
 
 deploy:
