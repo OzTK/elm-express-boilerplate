@@ -22,6 +22,7 @@ script:
 
 after_success:
   - snyk monitor
+  - cd bin
 
 deploy:
   provider: heroku
