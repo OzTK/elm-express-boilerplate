@@ -7,3 +7,4 @@ public/stylesheets
 webpack-assets.json
 log
 bin
+!webpack.config.js
