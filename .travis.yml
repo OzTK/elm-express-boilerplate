@@ -9,15 +9,15 @@ before_install:
   - npm i -g elm-test@latest
 
 install:
-  - elm-package install --yes
+  - elm-make --yes
   - cd tests
-  - elm-package install --yes
+  - elm-make --yes
   - cd ..
-  - npm install --no-package-lock
+  - npm install
   - snyk test
-  - travis_wait 30 npm run build
 
 script:
+  - npm run build
   - npm test
 
 after_success:
