@@ -15,9 +15,9 @@ install:
   - cd ..
   - npm install --no-package-lock
   - snyk test
+  - travis_wait 30 npm run build
 
 script:
-  - npm run build
   - npm test
 
 after_success:
