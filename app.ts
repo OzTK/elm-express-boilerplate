@@ -63,11 +63,14 @@ export default class App implements IApp {
 
     let container = getContainer();
 
-    console.debug("Compiling views...")
-    await initElmViewEngine(
-      new ElmOptions(join(__dirname, "views"), __dirname, app),
-    );
-    console.debug("Done compiling!")
+    log("info", "Compiling views...");
+    initElmViewEngine(new ElmOptions(join(__dirname, "views"), __dirname, app))
+      .then(() => {
+        log("info", "Done compiling!");
+      }).catch((err) => {
+        log("error", "Failed to compile views");
+        throw err;
+      });
 
     this.server = new InversifyExpressServer(container, null, null, app);
     this.server.setConfig(this.initMiddlewares.bind(this));
