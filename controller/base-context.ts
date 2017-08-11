@@ -19,6 +19,11 @@ export default class BaseContext {
       this.url = "http://";
     }
     
-    this.url += url + ":" + config.get<string>("env.port");
+    this.url += url;
+
+    const port = config.get<number>("env.port");
+    if (port !== 80) {
+      this.url += ":" + port;
+    }
   }
 }
