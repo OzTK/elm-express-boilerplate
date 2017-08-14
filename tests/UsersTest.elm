@@ -69,7 +69,7 @@ suiteUI =
                             [ tag "input"
                             , attribute "name" "search"
                             , attribute "type" "search"
-                            , attribute "placeholder" "Search GOT"
+                            , attribute "placeholder" "Search users"
                             ]
                         |> Query.has [ attribute "value" search ]
             ]
