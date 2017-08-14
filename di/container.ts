@@ -26,7 +26,7 @@ function getContainer(): Container {
     .whenTargetNamed(UsersRestController.TAG);
 
   if (config.get("env.hot")) {
-    const WebpackHotModuleReloading = require("../webpack-hot-module-reloading");
+    const WebpackHotModuleReloading = require("../webpack-hot-module-reloading").default;
     container
       .bind<HotModuleReloading>(TYPES.HotModuleReloading)
       .to(WebpackHotModuleReloading);

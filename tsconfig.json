@@ -24,8 +24,7 @@
     "elm-stuff",
     "public",
     "client",
-    "webpack.config.js",
-    "bin"
+    "webpack.config.js"
   ],
   "compileOnSave": true
 }

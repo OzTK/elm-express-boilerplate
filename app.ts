@@ -14,14 +14,14 @@ import * as hbs from "hbs";
 import * as hbsUtilsFactory from "hbs-utils";
 import * as helmet from "helmet";
 import * as cors from "cors";
-import { inject } from "inversify";
+import { inject, Container } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
-import TYPES from "./di/types";
 
 import { BaseCustomMiddleware } from "./middleware/base-custom-middleware";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
 import { IApp } from "app";
 import getContainer from "./di/container";
+import TYPES from "./di/types";
 import HttpError from "./http-error";
 import {
   configure as initElmViewEngine,
@@ -39,6 +39,7 @@ export default class App implements IApp {
   private static app: IApp;
 
   private server: InversifyExpressServer;
+  private container: Container;
 
   static getInstance(): IApp {
     if (!App.app) {
@@ -47,8 +48,6 @@ export default class App implements IApp {
 
     return App.app;
   }
-
-  constructor(@inject(TYPES.HotModuleReloading) private readonly hmr?: HotModuleReloading) {}
 
   async start(port: number, url: string): Promise<void> {
     await this.initServer();
@@ -61,7 +60,7 @@ export default class App implements IApp {
     let app = express();
     app.use(this.setupLogging(LoggingTypes.Http));
 
-    let container = getContainer();
+    this.container = getContainer();
 
     log("info", "Compiling views...");
     initElmViewEngine(new ElmOptions(join(__dirname, "views"), __dirname, app))
@@ -72,7 +71,7 @@ export default class App implements IApp {
         throw err;
       });
 
-    this.server = new InversifyExpressServer(container, null, null, app);
+    this.server = new InversifyExpressServer(this.container, null, null, app);
     this.server.setConfig(this.initMiddlewares.bind(this));
     this.server.setErrorConfig(this.initErrors.bind(this));
   }
@@ -90,8 +89,8 @@ export default class App implements IApp {
       .use(cors())
       .use(express.static(join(__dirname, "public")));
 
-    if (this.hmr) {
-      this.hmr.setup(app);
+    if (this.container.isBound(TYPES.HotModuleReloading)) {
+      this.container.get<HotModuleReloading>(TYPES.HotModuleReloading).setup(app);
     }
 
     // Custom middlewares

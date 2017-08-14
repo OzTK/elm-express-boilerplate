@@ -159,7 +159,7 @@ searchView msg searchQuery =
             [ input
                 [ type_ "search"
                 , name "search"
-                , placeholder "Search GOT"
+                , placeholder "Search users"
                 , value searchQuery
                 , onInput msg
                 ]

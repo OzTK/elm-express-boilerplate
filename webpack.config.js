@@ -27,6 +27,10 @@ module.exports = (env) => {
 
       if (env.hot) {
         Object.keys(entries).forEach(entryKey => {
+          const path = entries[entryKey][0];
+          // We are in bin/ but want to get the changes
+          // from our original source files -> going up 1 level
+          entries[entryKey][0] = "." + path;
           entries[entryKey].push(
             "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",
           );
