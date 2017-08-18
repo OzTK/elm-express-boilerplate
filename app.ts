@@ -1,5 +1,5 @@
 import * as express from "express";
-import { join } from "path";
+import { join, dirname } from "path";
 import * as favicon from "serve-favicon";
 import {
   errorLogger,
@@ -63,7 +63,8 @@ export default class App implements IApp {
     this.container = getContainer();
 
     log("info", "Compiling views...");
-    initElmViewEngine(new ElmOptions(join(__dirname, "views"), __dirname, app))
+    const baseDir = config.get("env.production") ? __dirname : dirname(__dirname);
+    initElmViewEngine(new ElmOptions(join(baseDir, "views"), baseDir, app, false, join(__dirname, "views")))
       .then(() => {
         log("info", "Done compiling!");
       }).catch((err) => {
