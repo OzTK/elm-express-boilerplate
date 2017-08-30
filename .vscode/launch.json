@@ -15,7 +15,8 @@
                 "NODE_ENV": "development",
                 "PORT": 5000,
                 "URL": "localhost"
-            }
+            },
+            "preLaunchTask": "build:dev"
         },
         {
             "type": "node",
@@ -27,7 +28,8 @@
                 "NODE_ENV": "production",
                 "PORT": 5000,
                 "URL": "localhost"
-            }
+            },
+            "preLaunchTask": "build"
         },
         {
             "type": "node",
@@ -41,7 +43,8 @@
                 "NODE_ENV": "development",
                 "PORT": 5000,
                 "URL": "localhost"
-            }
+            },
+            "preLaunchTask": "build:hot"
         }
     ]
 }
