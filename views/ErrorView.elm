@@ -1,6 +1,5 @@
-module ErrorView exposing (view)
+module ErrorView exposing (view, context)
 
-import Json.Encode as JE
 import Regex exposing (replace, regex, HowMany(All))
 import Json.Decode.Pipeline exposing (decode, required, optional)
 import Json.Decode exposing (Decoder, decodeValue, string, nullable, int)
@@ -30,8 +29,8 @@ error =
         |> required "stack" string
 
 
-errorContext : Decoder ErrorContext
-errorContext =
+context : Decoder ErrorContext
+context =
     decode ErrorContext
         |> required "message" string
         |> required "error" (nullable error)
@@ -42,10 +41,15 @@ errorContext =
 -- View
 
 
-view : msg -> JE.Value -> Result String (Html msg)
-view msg jsonCtx =
-    decodeValue errorContext jsonCtx
-        |> Result.map displayError
+view : ErrorContext -> Html Never
+view err =
+    div []
+        ([ h1 [] [ text "Oups!" ]
+         , h2 [] [ text err.message ]
+         ]
+            ++ internalError err
+        )
+        |> Layout.view (head err.assets) (bottom err.assets) err.assets
 
 
 internalError : ErrorContext -> List (Html msg)
@@ -63,17 +67,6 @@ internalError err =
 
         Nothing ->
             []
-
-
-displayError : ErrorContext -> Html msg
-displayError err =
-    div []
-        ([ h1 [] [ text "Oups!" ]
-         , h2 [] [ text err.message ]
-         ]
-            ++ internalError err
-        )
-        |> Layout.view (head err.assets) (bottom err.assets) err.assets
 
 
 head : Maybe Assets -> List (Html msg)

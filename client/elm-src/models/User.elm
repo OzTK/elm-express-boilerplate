@@ -1,4 +1,4 @@
-module User exposing (User, user, fromValue, listFromValue)
+module User exposing (User, user, fromValue, listFromValue, toValue)
 
 import Json.Encode as JE
 import Json.Decode exposing (Decoder, int, string, list, decodeValue)
@@ -23,6 +23,15 @@ user =
 fromValue : JE.Value -> Result String User
 fromValue =
     decodeValue user
+
+
+toValue : User -> JE.Value
+toValue u =
+    JE.object
+        [ ( "fname", JE.string u.fname )
+        , ( "lname", JE.string u.lname )
+        , ( "age", JE.int u.age )
+        ]
 
 
 listFromValue : JE.Value -> Result String (List User)

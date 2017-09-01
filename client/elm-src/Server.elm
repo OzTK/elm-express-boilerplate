@@ -1,4 +1,4 @@
-module Server exposing (ViewContext, Assets, Asset, viewContextFromValue, assets)
+module Server exposing (ViewContext, Assets, Asset, viewContext, viewContextJson, assets)
 
 import Json.Encode as JE
 import Json.Decode exposing (Decoder, int, string, list, nullable, decodeValue)
@@ -52,6 +52,30 @@ viewContext contextDecoder =
         |> required "assets" assets
 
 
-viewContextFromValue : Decoder c -> JE.Value -> Result String (ViewContext c)
-viewContextFromValue dec =
-    decodeValue <| viewContext dec
+viewContextJson : ViewContext c -> JE.Value -> List ( String, JE.Value )
+viewContextJson vc c =
+    [ ( "context", c ), ( "assets", assetsJson vc.assets ) ]
+
+
+assetsJson : Assets -> JE.Value
+assetsJson assets =
+    JE.object
+        [ ( "users", assetJson assets.users )
+        , ( "home", assetJson assets.home )
+        , ( "manifest", assetJson assets.manifest )
+        , ( "error", assetJson assets.error )
+        ]
+
+
+assetJson : Asset -> JE.Value
+assetJson asset =
+    JE.object
+        [ ( "js"
+          , Maybe.map (\a -> JE.string a) asset.js
+                |> Maybe.withDefault JE.null
+          )
+        , ( "css"
+          , Maybe.map (\a -> JE.string a) asset.css
+                |> Maybe.withDefault JE.null
+          )
+        ]

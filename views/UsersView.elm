@@ -1,26 +1,37 @@
 module UsersView exposing (..)
 
+import Json.Decode
 import Json.Encode as JE
 import Html exposing (Html, h1, div, text, node)
 import Html.Attributes exposing (src, rel, href, id)
-import Server exposing (ViewContext)
-import RemoteData exposing (RemoteData(..), WebData)
+import Server exposing (ViewContext, viewContext, viewContextJson)
+import User
 import Users
 import Layout
 
 
-view : msg -> JE.Value -> Result String (Html msg)
-view msg jsonCtx =
-    Server.viewContextFromValue Users.flags jsonCtx
-        |> Result.map (users msg jsonCtx)
+context : Json.Decode.Decoder (ViewContext Users.Flags)
+context =
+    viewContext Users.flags
 
 
-users : msg -> JE.Value -> ViewContext Users.Flags -> Html msg
-users msg jsonCtx c =
-    Users.root (\_ -> msg) { search = c.context.search, url = c.context.url, users = Success c.context.users }
-        |> flip (::) []
+flagsJson : Users.Flags -> JE.Value
+flagsJson ctx =
+    JE.object
+        [ ( "users", JE.list <| List.map User.toValue ctx.users )
+        , ( "url", JE.string ctx.url )
+        , ( "search", JE.string ctx.search )
+        ]
+
+
+view : ViewContext Users.Flags -> Html Users.Msg
+view ctx =
+    Users.init ctx.context
+        |> Tuple.first
+        |> Users.view
+        |> List.singleton
         |> div [ id "app" ]
-        |> Layout.view (head c) (bottom jsonCtx c) (Just c.assets)
+        |> Layout.view (head ctx) (bottom ctx) (Just ctx.assets)
 
 
 head : ViewContext Users.Flags -> List (Html msg)
@@ -33,11 +44,11 @@ head c =
             []
 
 
-bottom : JE.Value -> ViewContext Users.Flags -> List (Html msg)
-bottom jsonCtx c =
+bottom : ViewContext Users.Flags -> List (Html msg)
+bottom c =
     case c.assets.users.js of
         Just js ->
-            [ node "script" [] [ text ("var context = " ++ (JE.encode 4 jsonCtx) ++ ".context;") ]
+            [ node "script" [] [ text ("var context = " ++ JE.encode 4 (flagsJson c.context) ++ ";") ]
             , node "script" [ src js ] []
             ]
 
