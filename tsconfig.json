@@ -22,7 +22,7 @@
   "exclude": [
     "node_modules",
     "elm-stuff",
-    "public",
+    "bin",
     "client",
     "webpack.config.js"
   ],

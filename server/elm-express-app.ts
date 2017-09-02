@@ -61,7 +61,7 @@ export default class ElmExpressApp implements App {
     const baseDir = isProd ? __dirname : dirname(__dirname);
     initElmViewEngine(
       new ElmOptions(
-        isProd ? join(baseDir, "views") : join(baseDir, "src", "views"),
+        isProd ? join(baseDir, "views") : join(baseDir, "server", "views"),
         baseDir,
         app,
         false,

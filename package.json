@@ -23,7 +23,7 @@
     "postbuild": "./postbuild.sh && npm run build:views",
     "postbuild:dev": "./postbuild.sh --dev",
     "postbuild:hot": "./postbuild.sh --dev",
-    "build:views": "elm-view-engine -v src/views -o bin/views",
+    "build:views": "elm-view-engine -v server/views -o bin/views",
     "client": "npm-run-all wp",
     "wp": "webpack --progress",
     "wp-prod": "webpack -p --env.production --progress",
@@ -37,8 +37,8 @@
   "watch": {
     "build:views": {
       "patterns": [
-        "src/views",
-        "src/client/elm-src/**/*"
+        "server/views",
+        "client/elm/**/*"
       ],
       "extensions": "elm",
       "quiet": false

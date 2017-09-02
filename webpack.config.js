@@ -20,9 +20,9 @@ module.exports = (env) => {
   return {
     entry: (() => {
       let entries = {
-        users: ['./src/client/src/users.ts'],
-        home: ['./src/client/src/home.ts'],
-        error: ['./src/client/src/error.ts'],
+        users: ['./client/users.ts'],
+        home: ['./client/home.ts'],
+        error: ['./client/error.ts'],
       };
 
       if (env.hot) {
@@ -105,7 +105,7 @@ module.exports = (env) => {
             verbose: !env.production,
           },
         ),
-        new AssetsPlugin({ path: path.join(__dirname, 'bin') }),
+        new AssetsPlugin({ path: env.hot ? __dirname : path.join(__dirname, 'bin') }),
         new webpack.NoEmitOnErrorsPlugin(),
       ];
 
