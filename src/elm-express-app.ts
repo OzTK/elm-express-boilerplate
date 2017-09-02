@@ -40,7 +40,11 @@ export default class ElmExpressApp implements App {
 
   private server: InversifyExpressServer;
 
-  constructor(@inject(TYPES.HotModuleReloading) @optional() private hmr: HotModuleReloading) {}
+  constructor(
+    @inject(TYPES.HotModuleReloading)
+    @optional()
+    private hmr: HotModuleReloading,
+  ) {}
 
   async start(port: number, url: string): Promise<void> {
     this.server.build().listen(port, url, () => {
@@ -53,11 +57,21 @@ export default class ElmExpressApp implements App {
     app.use(this.setupLogging(LoggingTypes.Http));
 
     log("info", "Compiling views...");
-    const baseDir = config.get("env.production") ? __dirname : dirname(__dirname);
-    initElmViewEngine(new ElmOptions(join(baseDir, "views"), baseDir, app, false, join(__dirname, "views")))
+    const isProd = config.get("env.production");
+    const baseDir = isProd ? __dirname : dirname(__dirname);
+    initElmViewEngine(
+      new ElmOptions(
+        isProd ? join(baseDir, "views") : join(baseDir, "src", "views"),
+        baseDir,
+        app,
+        false,
+        join(__dirname, "views"),
+      ),
+    )
       .then(() => {
         log("info", "Done compiling!");
-      }).catch((err) => {
+      })
+      .catch(err => {
         log("error", "Failed to compile views");
         throw err;
       });
@@ -115,7 +129,8 @@ export default class ElmExpressApp implements App {
           break;
       }
 
-      fs.existsSync(ElmExpressApp.logDirectory) || fs.mkdirSync(ElmExpressApp.logDirectory);
+      fs.existsSync(ElmExpressApp.logDirectory) ||
+        fs.mkdirSync(ElmExpressApp.logDirectory);
       const dir = join(ElmExpressApp.logDirectory, dname);
       fs.existsSync(dir) || fs.mkdirSync(dir);
       transport = new transports.DailyRotateFile({

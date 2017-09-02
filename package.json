@@ -2,7 +2,6 @@
   "name": "elm-express-boilerplate",
   "version": "0.1.0",
   "engines": {
-    "vscode": "^0.10.0",
     "node": "^8.2.1"
   },
   "author": {
@@ -21,24 +20,25 @@
     "build": "npm-run-all clean ts wp-prod",
     "build:dev": "npm-run-all clean ts wp",
     "build:hot": "npm-run-all clean ts",
-    "postbuild": "./postbuild.sh",
+    "postbuild": "./postbuild.sh && npm run build:views",
     "postbuild:dev": "./postbuild.sh --dev",
     "postbuild:hot": "./postbuild.sh --dev",
-    "build:views": "elm-view-engine -o bin/views",
+    "build:views": "elm-view-engine -v src/views -o bin/views",
     "client": "npm-run-all wp",
     "wp": "webpack --progress",
     "wp-prod": "webpack -p --env.production --progress",
     "ts": "tsc -p .",
-    "start": "node ./www",
+    "start": "cd bin && node ./www",
     "start:prod": "NODE_ENV=production npm run start",
+    "start:debug": "HOT=true npm run start",
     "watch": "npm-watch build:views",
     "test": "elm-test"
   },
   "watch": {
     "build:views": {
       "patterns": [
-        "views",
-        "client/elm-src/**/*"
+        "src/views",
+        "src/client/elm-src/**/*"
       ],
       "extensions": "elm",
       "quiet": false

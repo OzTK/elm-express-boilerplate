@@ -4,7 +4,18 @@ const container = require("./ioc/container").default();
 const conf = require("config");
 
 const app = container.get(TYPES.App);
-app.init(container);
-app.start(
-  process.env.PORT || conf.get("env.port") || "3000",
-  process.env.URL || conf.get("env.url") || "localhost");
+app
+  .init(container)
+  .then(() =>
+    setTimeout(
+      () =>
+        app.start(
+          process.env.PORT || conf.get("env.port") || "3000",
+          process.env.URL || conf.get("env.url") || "localhost",
+        ),
+      2000, // Waiting 2 secs to avoid compilation conflicts with hmr
+    ),
+  )
+  .catch(err => {
+    throw err;
+  });

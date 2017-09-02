@@ -2,7 +2,7 @@ module HomeView exposing (view, context)
 
 import Json.Decode.Pipeline exposing (decode, required)
 import Json.Decode exposing (Decoder, string)
-import Html exposing (Html, h1, div, img, text, node)
+import Html exposing (Html, h1, h3, div, img, text, node)
 import Html.Attributes exposing (href, rel, src, alt)
 import Server exposing (ViewContext, Assets, viewContext)
 import Layout
@@ -30,7 +30,7 @@ view : ViewContext TitleContext -> Html Never
 view ctx =
     div []
         [ h1 [] [ text ctx.context.title ]
-        , img [ alt "ELM", src "/images/elm.png" ] []
+        , img [ alt "ELM", src "/img/elm.png" ] []
         ]
         |> Layout.view (head ctx.assets) (bottom ctx.assets) (Just ctx.assets)
 

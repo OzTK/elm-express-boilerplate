@@ -4,10 +4,10 @@
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
-        "../client/elm-src",
-        "../client/elm-src/services",
-        "../client/elm-src/models",
-        "../client/elm-src/styles",
+        "../src/client/elm-src",
+        "../src/client/elm-src/services",
+        "../src/client/elm-src/models",
+        "../src/client/elm-src/styles",
         "."
     ],
     "exposed-modules": [],

@@ -1,11 +1,10 @@
-import HotModuleReloading from "./contract/hot-module-reloading";
 import * as config from "config";
-
 import * as express from "express";
 import * as webpack from "webpack";
 import * as webpackDevMiddleware from "webpack-dev-middleware";
 import * as webpackHotMiddleware from "webpack-hot-middleware";
 import { injectable } from "inversify";
+import HotModuleReloading from "./contract/hot-module-reloading";
 
 @injectable()
 export default class WebpackHotModuleReloading implements HotModuleReloading {

@@ -1,28 +1,28 @@
-var path = require("path");
-var webpack = require("webpack");
-var CleanWebpackPlugin = require("clean-webpack-plugin");
-var AssetsPlugin = require("assets-webpack-plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var path = require('path');
+var webpack = require('webpack');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var AssetsPlugin = require('assets-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = (env) => {
   if (!env) {
     env = {};
   }
 
-  let cssName = "[name].css";
-  let jsName = "[name].js";
+  let cssName = '[name].css';
+  let jsName = '[name].js';
 
   if (env.production) {
-    cssName = "[chunkhash].[name].css";
-    jsName = "[chunkhash].[name].js";
+    cssName = '[chunkhash].[name].css';
+    jsName = '[chunkhash].[name].js';
   }
 
   return {
     entry: (() => {
       let entries = {
-        users: ["./client/src/users.ts"],
-        home: ["./client/src/home.ts"],
-        error: ["./client/src/error.ts"],
+        users: ['./src/client/src/users.ts'],
+        home: ['./src/client/src/home.ts'],
+        error: ['./src/client/src/error.ts'],
       };
 
       if (env.hot) {
@@ -32,7 +32,7 @@ module.exports = (env) => {
           // from our original source files -> going up 1 level
           entries[entryKey][0] = "." + path;
           entries[entryKey].push(
-            "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",
+            'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
           );
         });
       }
@@ -40,29 +40,29 @@ module.exports = (env) => {
       return entries;
     })(),
     resolve: {
-      extensions: [".ts", ".js", ".elm"],
+      extensions: ['.ts', '.js', '.elm'],
     },
     module: (() => {
       // Mapping each page's css to a rule (required for elm-css-webpack-loader)
       const cssRules = [
-        "HomeStylesheets",
-        "UsersStylesheets",
-        "MainStylesheets",
+        'HomeStylesheets',
+        'UsersStylesheets',
+        'MainStylesheets',
       ].map((moduleName) => ({
-        test: new RegExp(moduleName + ".elm$"),
+        test: new RegExp(moduleName + '.elm$'),
         use: env.hot
           ? [
-              "style-loader",
-              "css-loader",
-              "elm-css-webpack-loader?module=" + moduleName,
+              'style-loader',
+              'css-loader',
+              'elm-css-webpack-loader?module=' + moduleName,
             ]
           : ExtractTextPlugin.extract({
-              fallback: "style-loader",
+              fallback: 'style-loader',
               use: [
-                "css-loader",
-                "elm-css-webpack-loader?module=" + moduleName,
+                'css-loader',
+                'elm-css-webpack-loader?module=' + moduleName,
               ],
-              publicPath: "/",
+              publicPath: '/',
             }),
         exclude: [/elm-stuff/, /node_modules/],
       }));
@@ -73,19 +73,19 @@ module.exports = (env) => {
             test: /\.elm$/,
             exclude: [/elm-stuff/, /node_modules/, /Stylesheets\.elm$/],
             use: [
-              "elm-hot-loader",
-              "elm-webpack-loader?verbose=true&warn=true",
+              'elm-hot-loader',
+              'elm-webpack-loader?verbose=true&warn=true',
             ],
           },
-          { test: /\.ts$/, use: "ts-loader", exclude: /node_modules/ },
+          { test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ },
           {
             test: /\.css$/,
             use: env.hot
-              ? ["style-loader", "css-loader"]
+              ? ['style-loader', 'css-loader']
               : ExtractTextPlugin.extract({
-                  fallback: "style-loader",
-                  use: ["css-loader"],
-                  publicPath: "/",
+                  fallback: 'style-loader',
+                  use: ['css-loader'],
+                  publicPath: '/',
                 }),
             exclude: /node_modules/,
           },
@@ -96,16 +96,16 @@ module.exports = (env) => {
     plugins: (() => {
       let plugins = [
         new webpack.optimize.CommonsChunkPlugin({
-          names: ["manifest"], // Specify the common bundle's name.
+          names: ['manifest'], // Specify the common bundle's name.
         }),
         new CleanWebpackPlugin(
-          ["javascripts", "stylesheets", "../webpack-assets.json"],
+          ['javascripts', 'stylesheets', '../webpack-assets.json'],
           {
-            root: path.resolve(__dirname, "public"),
-            verbose: true,
+            root: path.resolve(__dirname, 'public'),
+            verbose: !env.production,
           },
         ),
-        new AssetsPlugin(),
+        new AssetsPlugin({ path: path.join(__dirname, 'bin') }),
         new webpack.NoEmitOnErrorsPlugin(),
       ];
 
@@ -119,8 +119,8 @@ module.exports = (env) => {
         // chunkhash not supported with HMR
         plugins.push(
           new ExtractTextPlugin(
-            "stylesheets/" +
-              (!env.production ? "[name].css" : "[chunkhash].[name].css"),
+            'stylesheets/' +
+              (!env.production ? '[name].css' : '[chunkhash].[name].css'),
           ),
         );
       }
@@ -130,10 +130,10 @@ module.exports = (env) => {
     output: {
       // chunkhash not supported with HMR
       filename:
-        "javascripts/" +
-        (!env.production ? "[name].js" : "[chunkhash].[name].js"),
-      path: path.resolve(__dirname, "public"),
-      publicPath: "/",
+        'javascripts/' +
+        (!env.production ? '[name].js' : '[chunkhash].[name].js'),
+      path: env.hot ? path.resolve(__dirname, 'public') : path.resolve(__dirname, 'bin', 'public'),
+      publicPath: '/',
     },
   };
 };
