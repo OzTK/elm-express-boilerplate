@@ -10,6 +10,7 @@ before_install:
 
 install:
   - travis_retry travis_wait elm-make --yes
+  - cp -r elm-stuff tests
   - cd tests
   - travis_retry travis_wait elm-make --yes
   - cd ..
@@ -17,8 +18,8 @@ install:
   - snyk test
 
 script:
-  - npm run build
-  - npm test
+  - travis_wait 30 npm run build
+  - travis_wait 30 npm test
 
 after_success:
   - snyk monitor
