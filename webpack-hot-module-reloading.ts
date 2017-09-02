@@ -1,4 +1,4 @@
-import HotModuleReloading from "./di/hot-module-reloading";
+import HotModuleReloading from "./contract/hot-module-reloading";
 import * as config from "config";
 
 import * as express from "express";

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { BaseCustomMiddleware } from "./base-custom-middleware";
-import App from "../app";
+import BaseCustomMiddleware from "./base-custom-middleware";
+import * as path from "path";
 
 export default class WebpackAssetsParser extends BaseCustomMiddleware {
-  private static readonly jsonPath = "../webpack-assets.json";
+  private static readonly jsonPath = path.join(__dirname, "..", "webpack-assets.json");
 
   parse() {
     return require(WebpackAssetsParser.jsonPath);

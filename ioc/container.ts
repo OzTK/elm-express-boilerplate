@@ -4,10 +4,13 @@ import * as config from "config";
 import TYPES from "./types";
 import { Container } from "inversify";
 import { interfaces, TYPE } from "inversify-express-utils";
-import HotModuleReloading from "./hot-module-reloading";
+
+import HotModuleReloading from "../contract/hot-module-reloading";
+import App from "../contract/app";
 import UsersRestController from "../rest/v1/users-rest-controller";
 import HomeController from "../controller/home-controller";
 import UsersController from "../controller/users-controller";
+import ElmExpressApp from "../elm-express-app";
 
 function getContainer(): Container {
   const container = new Container();
@@ -31,6 +34,8 @@ function getContainer(): Container {
       .bind<HotModuleReloading>(TYPES.HotModuleReloading)
       .to(WebpackHotModuleReloading);
   }
+
+  container.bind<App>(TYPES.App).to(ElmExpressApp).inSingletonScope();
 
   return container;
 }

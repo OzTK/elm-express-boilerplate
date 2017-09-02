@@ -1,5 +1,4 @@
 import User from "../model/user";
-import App from "../app";
 import * as config from "config";
 
 export default class BaseContext {

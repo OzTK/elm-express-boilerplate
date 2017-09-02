@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-let MyApp = require("./app").default;
+const TYPES = require("./ioc/types").default;
+const container = require("./ioc/container").default();
 const conf = require("config");
 
-const app = MyApp.getInstance();
+const app = container.get(TYPES.App);
+app.init(container);
 app.start(
   process.env.PORT || conf.get("env.port") || "3000",
   process.env.URL || conf.get("env.url") || "localhost");

@@ -1,66 +1,56 @@
 import * as express from "express";
 import { join, dirname } from "path";
-import * as favicon from "serve-favicon";
+import * as fs from "fs";
+
+// Middleware
+import "winston-daily-rotate-file";
 import {
   errorLogger,
   logger,
   winstonExpressMiddleware,
 } from "winston-express-middleware";
 import { TransportInstance, transports, log } from "winston";
-import "winston-daily-rotate-file";
-import * as fs from "fs";
+import * as favicon from "serve-favicon";
 import { json, urlencoded } from "body-parser";
-import * as hbs from "hbs";
-import * as hbsUtilsFactory from "hbs-utils";
 import * as helmet from "helmet";
 import * as cors from "cors";
-import { inject, Container } from "inversify";
-import { InversifyExpressServer } from "inversify-express-utils";
-
-import { BaseCustomMiddleware } from "./middleware/base-custom-middleware";
+import BaseCustomMiddleware from "./middleware/base-custom-middleware";
 import WebpackAssetsParser from "./middleware/webpack-assets-parser";
-import { IApp } from "app";
-import getContainer from "./di/container";
-import TYPES from "./di/types";
+import HotModuleReloading from "./contract/hot-module-reloading";
+
+// IOC
+import { inject, injectable, Container, optional } from "inversify";
+import { InversifyExpressServer } from "inversify-express-utils";
+import TYPES from "./ioc/types";
+
 import HttpError from "./http-error";
 import {
   configure as initElmViewEngine,
   Options as ElmOptions,
 } from "elm-view-engine";
-import HotModuleReloading from "./di/hot-module-reloading";
 
 import * as webpack from "webpack";
-import * as webpackDevMiddleware from "webpack-dev-middleware";
-import * as webpackHotMiddleware from "webpack-hot-middleware";
 import * as config from "config";
 
-export default class App implements IApp {
+import App from "./contract/app";
+
+@injectable()
+export default class ElmExpressApp implements App {
   private static readonly logDirectory = join(__dirname, "log");
-  private static app: IApp;
 
   private server: InversifyExpressServer;
-  private container: Container;
 
-  static getInstance(): IApp {
-    if (!App.app) {
-      App.app = new App();
-    }
-
-    return App.app;
-  }
+  constructor(@inject(TYPES.HotModuleReloading) @optional() private hmr: HotModuleReloading) {}
 
   async start(port: number, url: string): Promise<void> {
-    await this.initServer();
     this.server.build().listen(port, url, () => {
       log("info", "Server started at %s on port %d", url, port);
     });
   }
 
-  private async initServer(): Promise<void> {
+  async init(container: Container): Promise<void> {
     let app = express();
     app.use(this.setupLogging(LoggingTypes.Http));
-
-    this.container = getContainer();
 
     log("info", "Compiling views...");
     const baseDir = config.get("env.production") ? __dirname : dirname(__dirname);
@@ -72,7 +62,7 @@ export default class App implements IApp {
         throw err;
       });
 
-    this.server = new InversifyExpressServer(this.container, null, null, app);
+    this.server = new InversifyExpressServer(container, null, null, app);
     this.server.setConfig(this.initMiddlewares.bind(this));
     this.server.setErrorConfig(this.initErrors.bind(this));
   }
@@ -90,8 +80,8 @@ export default class App implements IApp {
       .use(cors())
       .use(express.static(join(__dirname, "public")));
 
-    if (this.container.isBound(TYPES.HotModuleReloading)) {
-      this.container.get<HotModuleReloading>(TYPES.HotModuleReloading).setup(app);
+    if (this.hmr) {
+      this.hmr.setup(app);
     }
 
     // Custom middlewares
@@ -125,8 +115,8 @@ export default class App implements IApp {
           break;
       }
 
-      fs.existsSync(App.logDirectory) || fs.mkdirSync(App.logDirectory);
-      const dir = join(App.logDirectory, dname);
+      fs.existsSync(ElmExpressApp.logDirectory) || fs.mkdirSync(ElmExpressApp.logDirectory);
+      const dir = join(ElmExpressApp.logDirectory, dname);
       fs.existsSync(dir) || fs.mkdirSync(dir);
       transport = new transports.DailyRotateFile({
         filename: join(dir, fname),
