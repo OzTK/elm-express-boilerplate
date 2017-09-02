@@ -9,7 +9,7 @@ before_install:
   - npm i -g elm-test@latest
 
 install:
-  - travis_retry elm-make --yes
+  - travis_retry travis_wait 40 elm-make --yes
   - cp -r elm-stuff tests
   - npm install
   - snyk test
@@ -22,7 +22,7 @@ after_success:
   - snyk monitor
   
 before_deploy:
-  - cd ./bin
+  - cd ./dist
 
 deploy:
   provider: heroku

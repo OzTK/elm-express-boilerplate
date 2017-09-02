@@ -28,7 +28,7 @@ module.exports = (env) => {
       if (env.hot) {
         Object.keys(entries).forEach(entryKey => {
           const path = entries[entryKey][0];
-          // We are in bin/ but want to get the changes
+          // We are in dist/ but want to get the changes
           // from our original source files -> going up 1 level
           entries[entryKey][0] = "." + path;
           entries[entryKey].push(
@@ -105,7 +105,7 @@ module.exports = (env) => {
             verbose: !env.production,
           },
         ),
-        new AssetsPlugin({ path: env.hot ? __dirname : path.join(__dirname, 'bin') }),
+        new AssetsPlugin({ path: env.hot ? __dirname : path.join(__dirname, 'dist') }),
         new webpack.NoEmitOnErrorsPlugin(),
       ];
 
@@ -132,7 +132,7 @@ module.exports = (env) => {
       filename:
         'javascripts/' +
         (!env.production ? '[name].js' : '[chunkhash].[name].js'),
-      path: env.hot ? path.resolve(__dirname, 'public') : path.resolve(__dirname, 'bin', 'public'),
+      path: env.hot ? path.resolve(__dirname, 'public') : path.resolve(__dirname, 'dist', 'public'),
       publicPath: '/',
     },
   };

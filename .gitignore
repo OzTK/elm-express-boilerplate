@@ -6,5 +6,5 @@ public/stylesheets
 *.js.map
 webpack-assets.json
 log
-bin
+dist
 !webpack.config.js
