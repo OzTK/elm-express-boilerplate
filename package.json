@@ -29,7 +29,7 @@
     "wp-prod": "webpack -p --env.production --progress",
     "ts": "tsc -p .",
     "start": "cd dist && node ./www",
-    "start:prod": "NODE_ENV=production npm run start",
+    "start:prod": "NODE_ENV=production node ./www",
     "start:debug": "HOT=true npm run start",
     "watch": "npm-watch build:views",
     "test": "elm-test"

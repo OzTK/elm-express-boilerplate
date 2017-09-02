@@ -2,6 +2,7 @@
 
 copyfiles www\
           config/*\
+          Procfile\
           package.json\
           dist #Destination dir
 
