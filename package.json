@@ -20,7 +20,7 @@
     "build": "npm-run-all clean ts wp-prod",
     "build:dev": "npm-run-all clean ts wp",
     "build:hot": "npm-run-all clean ts",
-    "postbuild": "./postbuild.sh && npm run build:views",
+    "postbuild": "./postbuild.sh",
     "postbuild:dev": "./postbuild.sh --dev",
     "postbuild:hot": "./postbuild.sh --dev",
     "build:views": "elm-view-engine -v server/views -o dist/views",
