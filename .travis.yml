@@ -15,8 +15,8 @@ install:
   - snyk test
 
 script:
-  - travis_wait 40 npm run build
-  - travis_wait 40 npm test
+  - travis_retry travis_wait 40 npm run build
+  - travis_retry travis_wait 40 npm test
 
 after_success:
   - snyk monitor
