@@ -2,6 +2,11 @@ language: node_js
 node_js:
   - "8"
 
+env:
+  matrix:
+    - COMMAND=build:views
+    - COMMAND=test
+
 before_install:
   - npm i -g npm@latest
   - npm i -g elm@latest
@@ -16,8 +21,7 @@ install:
 
 script:
   - npm run build
-  - travis_wait 40 npm run build:views
-  - travis_retry travis_wait 40 npm test
+  - "travis_retry travis_wait 40 npm run $COMMAND"
 
 after_success:
   - snyk monitor
