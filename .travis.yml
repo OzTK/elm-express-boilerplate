@@ -14,8 +14,6 @@ before_install:
   - npm i -g elm-test@latest
 
 install:
-  - travis_retry travis_wait 40 elm-make --yes
-  - cp -r elm-stuff tests
   - npm install
   - snyk test
 
