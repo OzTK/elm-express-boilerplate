@@ -15,7 +15,7 @@ before_install:
 
 install:
   - npm install
-  - travis_retry elm-package install
+  - travis_retry elm-package install --yes
   - snyk test
 
 script:
