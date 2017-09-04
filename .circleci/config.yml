@@ -34,8 +34,20 @@ jobs:
           paths:
             - node_modules
             - elm-stuff
+            - tests/elm-stuff
           key: v1-dependencies-{{ checksum "package.json" }}
         
       - run: npm run build
       - run: npm test
       - run: npm run snyk:m
+
+      - run: bash .circleci/setup-heroku.bash
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:77:d2:07:31:3f:64:89:ff:77:cb:97:25:89:97:07"
+      - deploy:
+          name: Deploy master to Heroku
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              git push heroku master
+            fi
