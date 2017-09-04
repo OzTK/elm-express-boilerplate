@@ -31,9 +31,7 @@ module.exports = (env) => {
           // We are in dist/ but want to get the changes
           // from our original source files -> going up 1 level
           entries[entryKey][0] = "." + path;
-          entries[entryKey].push(
-            'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-          );
+          entries[entryKey].push('webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000');
         });
       }
 
