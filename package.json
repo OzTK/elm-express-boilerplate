@@ -16,6 +16,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "install": "elm-package install --yes",
     "clean": "rimraf dist",
     "build": "npm-run-all clean ts wp-prod",
     "build:dev": "npm-run-all clean ts wp",
@@ -32,7 +33,9 @@
     "start:prod": "NODE_ENV=production node ./www",
     "start:debug": "HOT=true npm run start",
     "watch": "npm-watch build:views",
-    "test": "elm-test"
+    "test": "elm-test",
+    "snyk:t": "snyk test",
+    "snyk:m": "snyk monitor"
   },
   "watch": {
     "build:views": {
@@ -91,6 +94,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "npm-watch": "^0.2.0",
     "rimraf": "^2.6.1",
+    "snyk": "^1.40.2",
     "standard": "^10.0.3",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.3.4",

@@ -26,12 +26,8 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: npm i -g elm
-      - run: npm i -g snyk
-      - run: npm i -g elm-test
       - run: npm install
-      - run: elm-package install --yes
-      - run: snyk test
+      - run: npm run snyk:t
 
       - save_cache:
           paths:
@@ -42,3 +38,4 @@ jobs:
       # run tests!
       - run: npm run build
       - run: npm test
+      - run: npm run snyk:m
