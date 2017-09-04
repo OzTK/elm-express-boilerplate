@@ -6,6 +6,4 @@ ADD . /app
 RUN npm install
 RUN npm run build:elm
 RUN npm run build
-RUN npm test
-EXPOSE 5000
-CMD npm start
+ENV NPM_CONFIG_PRODUCTION true
