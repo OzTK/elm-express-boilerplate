@@ -31,13 +31,13 @@ jobs:
               - v3-repo-{{ checksum ".circle-sha" }}
         - restore_cache:
             keys:
-              - v3-bundle-{{ checksum "package-lock.json" }}
+              - v3-bundle-{{ checksum "package.json" }}
               - v3-bundle-{{ checksum "elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
         - run: npm run build:elm
         - save_cache:
-            key: v3-bundle-{{ checksum "package-lock.json" }}
+            key: v3-bundle-{{ checksum "package.json" }}
             paths:
               - /elm-express-boilerplate/node-modules
         - save_cache:
@@ -58,7 +58,7 @@ jobs:
               - v3-repo-{{ checksum ".circle-sha" }}
         - restore_cache:
             keys:
-              - v3-bundle-{{ checksum "package-lock.json" }}
+              - v3-bundle-{{ checksum "package.json" }}
               - v3-bundle-{{ checksum "elm-package.json" }}
         - run: npm run build
 
@@ -75,7 +75,7 @@ jobs:
               - v3-repo-{{ checksum ".circle-sha" }}
         - restore_cache:
             keys:
-              - v3-bundle-{{ checksum "package-lock.json" }}
+              - v3-bundle-{{ checksum "package.json" }}
               - v3-bundle-{{ checksum "elm-package.json" }}
         - run: cp -r elm-stuff tests
         - run: npm test
