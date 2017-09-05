@@ -93,19 +93,19 @@ jobs:
 
 workflows:
   version: 2
-  build_test_deploy:
+  build-test-deploy:
     jobs:
       - clone
-      - dependencies
+      - dependencies:
           requires:
             - clone
-      - build
+      - build:
           requires:
             - dependencies
-      - test
+      - test:
           requires:
             - dependencies
-      - heroku_deploy
+      - heroku_deploy:
           requires:
             - build
             - test
