@@ -6,7 +6,7 @@ version: 2
 jobs:
   clone:
       docker:
-        - image: circleci/node:7.10
+        - image: node:8.4
       working_directory: ~/elm-express-boilerplate
       steps:
         - checkout
