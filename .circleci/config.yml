@@ -32,7 +32,7 @@ jobs:
               - v1-bundle-{{ checksum "package.json" }}
               - v1-bundle-{{ checksum "elm-package.json" }}
         - run: npm install
-        - run: snyk:t
+        - run: npm run snyk:t
         - run: npm run build:elm
         - save_cache:
             key: v1-bundle-{{ checksum "package.json" }}
