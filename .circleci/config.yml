@@ -7,7 +7,7 @@ jobs:
   clone:
       docker:
         - image: node:8.4
-      working_directory: ~/elm-express-boilerplate
+      working_directory: /elm-express-boilerplate
       steps:
         - checkout
         - run:
@@ -16,12 +16,12 @@ jobs:
         - save_cache:
             key: v2-repo-{{ checksum ".circle-sha" }}
             paths:
-              - ~/elm-express-boilerplate
+              - /elm-express-boilerplate
   
   dependencies:
       docker:
-        - image: circleci/node:7.10
-      working_directory: ~/elm-express-boilerplate
+        - image: node:8.4
+      working_directory: /elm-express-boilerplate
       steps:
         - run:
             name: save SHA to a file
@@ -39,16 +39,16 @@ jobs:
         - save_cache:
             key: v2-bundle-{{ checksum "package-lock.json" }}
             paths:
-              - ~/elm-express-boilerplate/node-modules
+              - /elm-express-boilerplate/node-modules
         - save_cache:
             key: v2-bundle-{{ checksum "elm-package.json" }}
             paths:
-              - ~/elm-express-boilerplate/elm-stuff
+              - /elm-express-boilerplate/elm-stuff
 
   build:
       docker:
-        - image: circleci/node:7.10
-      working_directory: ~/elm-express-boilerplate
+        - image: node:8.4
+      working_directory: /elm-express-boilerplate
       steps:
         - run:
             name: save SHA to a file
@@ -64,8 +64,8 @@ jobs:
 
   test:
       docker:
-        - image: circleci/node:7.10
-      working_directory: ~/elm-express-boilerplate
+        - image: node:8.4
+      working_directory: /elm-express-boilerplate
       steps:
         - run:
             name: save SHA to a file
@@ -83,8 +83,8 @@ jobs:
 
   heroku_deploy:
       docker:
-        - image: circleci/node:7.10
-      working_directory: ~/elm-express-boilerplate
+        - image: node:8.4
+      working_directory: /elm-express-boilerplate
       steps:
         - run: bash .circleci/setup-heroku.bash
         - add_ssh_keys:
