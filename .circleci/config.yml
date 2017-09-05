@@ -14,7 +14,7 @@ jobs:
             name: save SHA to a file
             command: echo $CIRCLE_SHA1 > .circle-sha
         - save_cache:
-            key: v2-repo-{{ checksum ".circle-sha" }}
+            key: v3-repo-{{ checksum ".circle-sha" }}
             paths:
               - /elm-express-boilerplate
   
@@ -28,20 +28,20 @@ jobs:
             command: echo $CIRCLE_SHA1 > .circle-sha
         - restore_cache:
             keys:
-              - v2-repo-{{ checksum ".circle-sha" }}
+              - v3-repo-{{ checksum ".circle-sha" }}
         - restore_cache:
             keys:
-              - v2-bundle-{{ checksum "package-lock.json" }}
-              - v2-bundle-{{ checksum "elm-package.json" }}
+              - v3-bundle-{{ checksum "package-lock.json" }}
+              - v3-bundle-{{ checksum "elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
         - run: npm run build:elm
         - save_cache:
-            key: v2-bundle-{{ checksum "package-lock.json" }}
+            key: v3-bundle-{{ checksum "package-lock.json" }}
             paths:
               - /elm-express-boilerplate/node-modules
         - save_cache:
-            key: v2-bundle-{{ checksum "elm-package.json" }}
+            key: v3-bundle-{{ checksum "elm-package.json" }}
             paths:
               - /elm-express-boilerplate/elm-stuff
 
@@ -55,11 +55,11 @@ jobs:
             command: echo $CIRCLE_SHA1 > .circle-sha
         - restore_cache:
             keys:
-              - v2-repo-{{ checksum ".circle-sha" }}
+              - v3-repo-{{ checksum ".circle-sha" }}
         - restore_cache:
             keys:
-              - v2-bundle-{{ checksum "package-lock.json" }}
-              - v2-bundle-{{ checksum "elm-package.json" }}
+              - v3-bundle-{{ checksum "package-lock.json" }}
+              - v3-bundle-{{ checksum "elm-package.json" }}
         - run: npm run build
 
   test:
@@ -72,11 +72,11 @@ jobs:
             command: echo $CIRCLE_SHA1 > .circle-sha
         - restore_cache:
             keys:
-              - v2-repo-{{ checksum ".circle-sha" }}
+              - v3-repo-{{ checksum ".circle-sha" }}
         - restore_cache:
             keys:
-              - v2-bundle-{{ checksum "package-lock.json" }}
-              - v2-bundle-{{ checksum "elm-package.json" }}
+              - v3-bundle-{{ checksum "package-lock.json" }}
+              - v3-bundle-{{ checksum "elm-package.json" }}
         - run: cp -r elm-stuff tests
         - run: npm test
         - run: npm run snyk:m
