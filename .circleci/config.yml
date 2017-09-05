@@ -32,6 +32,8 @@ jobs:
         - restore_cache:
             keys:
               - v4-bundle-{{ checksum "package.json" }}
+        - restore_cache:
+            keys:
               - v4-bundle-{{ checksum "elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
@@ -59,6 +61,8 @@ jobs:
         - restore_cache:
             keys:
               - v4-bundle-{{ checksum "package.json" }}
+        - restore_cache:
+            keys:
               - v4-bundle-{{ checksum "elm-package.json" }}
         - run: npm run build
 
@@ -76,6 +80,8 @@ jobs:
         - restore_cache:
             keys:
               - v4-bundle-{{ checksum "package.json" }}
+        - restore_cache:
+            keys:
               - v4-bundle-{{ checksum "elm-package.json" }}
         - run: cp -r elm-stuff tests
         - run: npm test
