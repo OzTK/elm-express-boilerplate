@@ -19,7 +19,6 @@ flagsJson : Users.Flags -> JE.Value
 flagsJson ctx =
     JE.object
         [ ( "users", JE.list <| List.map User.toValue ctx.users )
-        , ( "url", JE.string ctx.url )
         , ( "search", JE.string ctx.search )
         ]
 
