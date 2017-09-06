@@ -7,3 +7,4 @@ RUN npm install
 RUN npm run build:elm
 RUN npm run build
 ENV NPM_CONFIG_PRODUCTION true
+EXPOSE 5000
