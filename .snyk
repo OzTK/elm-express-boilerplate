@@ -5,5 +5,5 @@ ignore:
   'npm:tunnel-agent:20170305':
     - elm > request > tunnel-agent:
         reason: ignore for now
-        expires: '2017-09-07T19:47:26.642Z'
+        expires: '2017-10-07T19:47:26.642Z'
 patch: {}
