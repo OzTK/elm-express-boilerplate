@@ -35,7 +35,7 @@ jobs:
         - save_cache:
             key: v7-bundle-{{ checksum "package.json" }}
             paths:
-              - node-modules
+              - node_modules
         - save_cache:
             key: v7-bundle-{{ checksum "elm-package.json" }}
             paths:
@@ -43,7 +43,7 @@ jobs:
         - persist_to_workspace:
             root: /workspace
             paths:
-              - elm-express-boilerplate/node-modules
+              - elm-express-boilerplate/node_modules
               - elm-express-boilerplate/elm-stuff
 
   build:
