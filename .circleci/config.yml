@@ -5,7 +5,7 @@
 defaults: &defaults
   docker:
     - image: node:8.4
-  working_directory: /elm-express-boilerplate
+  working_directory: /workspace/elm-express-boilerplate
 
 version: 2
 jobs:
@@ -14,14 +14,15 @@ jobs:
       steps:
         - checkout
         - persist_to_workspace:
-            root: .
-            paths: **/*
+            root: /workspace
+            paths:
+              - elm-express-boilerplate
   
   dependencies:
       <<: *defaults
       steps:
         - attach_workspace:
-            at: .
+            at: /workspace
         - restore_cache:
             keys:
               - v7-bundle-{{ checksum "package.json" }}
@@ -40,23 +41,23 @@ jobs:
             paths:
               - elm-stuff
         - persist_to_workspace:
-            root: .
+            root: /workspace
             paths:
-              - node-modules
-              - elm-stuff
+              - elm-express-boilerplate/node-modules
+              - elm-express-boilerplate/elm-stuff
 
   build:
       <<: *defaults
       steps:
         - attach_workspace:
-            at: .
+            at: /workspace
         - run: npm run build
 
   test:
       <<: *defaults
       steps:
         - attach_workspace:
-            at: .
+            at: /workspace
         - run: cp -r elm-stuff tests
         - run: ls tests
         - run: npm test
@@ -70,7 +71,7 @@ jobs:
       <<: *defaults
       steps:
         - attach_workspace:
-            at: .
+            at: /workspace
         - run: bash .circleci/setup-heroku.bash
         - add_ssh_keys:
             fingerprints:
