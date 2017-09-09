@@ -7,6 +7,15 @@ defaults: &defaults
     - image: node:8.4
   working_directory: /workspace/elm-express-boilerplate
 
+elm: &elm
+  - restore_cache:
+      keys:
+        - v10-bundle-yarn
+  - run: yarn global add elm
+  - run: mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
+  - run: printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
+  - run: chmod +x $(npm config get prefix)/bin/elm-make
+
 version: 2
 jobs:
   clone:
@@ -21,6 +30,7 @@ jobs:
   dependencies:
       <<: *defaults
       steps:
+        <<: *elm
         - attach_workspace:
             at: /workspace
         - restore_cache:
@@ -28,7 +38,6 @@ jobs:
               - v10-bundle-{{ checksum "package.json" }}
               - v10-bundle-{{ checksum "elm-package.json" }}
               - v10-bundle-{{ checksum "tests/elm-package.json" }}
-        - run: yarn global add elm
         - run: npm install
         - run: npm run snyk:t
         - run: elm-package install --yes && cd tests && elm-package install --yes
@@ -36,6 +45,10 @@ jobs:
             key: v10-bundle-{{ checksum "package.json" }}
             paths:
               - node_modules
+        - save_cache:
+            key: v10-bundle-yarn
+            paths:
+              - ~/.yarn_cache
         - persist_to_workspace:
             root: /workspace
             paths:
@@ -58,9 +71,6 @@ jobs:
               make && make install;
               cd ..;
             fi
-      - run: mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
-      - run: printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
-      - run: chmod +x $(npm config get prefix)/bin/elm-make
       - save_cache:
           key: v10-bundle-hack
           paths:
@@ -73,6 +83,7 @@ jobs:
   elm-build:
     <<: *defaults
     steps:
+      <<: *elm
       - attach_workspace:
           at: /workspace
       - run: cat $(npm config get prefix)/bin/elm-make
@@ -95,6 +106,7 @@ jobs:
   build:
     <<: *defaults
     steps:
+      <<: *elm
       - attach_workspace:
           at: /workspace
       - run: npm run build
@@ -102,6 +114,7 @@ jobs:
   test:
     <<: *defaults
     steps:
+      <<: *elm
       - attach_workspace:
           at: /workspace
       - run: npm test
@@ -132,18 +145,18 @@ workflows:
   build-test-deploy:
     jobs:
       - clone
+      - hack
       - dependencies:
           requires:
             - clone
-      - hack:
-          requires:
-            - dependencies
       - build:
           requires:
             - hack
+            - dependencies
       - test:
           requires:
             - hack
+            - dependencies
       - heroku_deploy:
           requires:
             - build
