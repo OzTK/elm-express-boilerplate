@@ -51,10 +51,11 @@ jobs:
             keys:
               - v9-bundle-{{ checksum "package.json" }}
               - v9-bundle-{{ checksum "elm-package.json" }}
+              - v9-bundle-{{ checksum "tests/elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
         - run: mv node_modules/.bin/elm-make node_modules/.bin/elm-make-old
-        - run: echo "#\!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > node_modules/.bin/elm-make
+        - run: printf "#!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 node_modules/.bin/elm-make-old \"\$@\"" > node_modules/.bin/elm-make
         - run: chmod +x node_modules/.bin/elm-make
         - run: ./node_modules/.bin/elm-package install --yes && cd tests && ../node_modules/.bin/elm-package install --yes
         - save_cache:
@@ -65,11 +66,16 @@ jobs:
             key: v9-bundle-{{ checksum "elm-package.json" }}
             paths:
               - elm-stuff
+        - save_cache:
+            key: v9-bundle-{{ checksum "tests/elm-package.json" }}
+            paths:
+              - tests/elm-stuff
         - persist_to_workspace:
             root: /workspace
             paths:
               - elm-express-boilerplate/node_modules
               - elm-express-boilerplate/elm-stuff
+              - elm-express-boilerplate/tests/elm-stuff
 
   build:
       <<: *defaults
