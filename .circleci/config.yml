@@ -10,7 +10,7 @@ defaults: &defaults
 yarn: &yarn
   restore_cache:
     keys:
-      - v10-bundle-yarn
+      - v11-bundle-yarn
 
 elm: &elm
   run: |
@@ -39,21 +39,21 @@ jobs:
             at: /workspace
         - restore_cache:
             keys:
-              - v10-bundle-{{ checksum "package.json" }}
-              - v10-bundle-{{ checksum "elm-package.json" }}
-              - v10-bundle-{{ checksum "tests/elm-package.json" }}
+              - v11-bundle-{{ checksum "package.json" }}
+              - v11-bundle-{{ checksum "elm-package.json" }}
+              - v11-bundle-{{ checksum "tests/elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
         - run: rm ./node_modules/.bin/elm-make
         - run: elm-package install --yes && cd tests && elm-package install --yes
         - save_cache:
-            key: v10-bundle-{{ checksum "package.json" }}
+            key: v11-bundle-{{ checksum "package.json" }}
             paths:
               - node_modules
         - save_cache:
-            key: v10-bundle-yarn
+            key: v11-bundle-yarn
             paths:
-              - ~/.yarn_cache
+              - $(yarn cache dir)
         - persist_to_workspace:
             root: /workspace
             paths:
@@ -66,7 +66,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - v10-bundle-hack
+            - v11-bundle-hack
       - run: |
             if [ ! -d /workspace/sysconfcpus/bin ];
             then
@@ -77,7 +77,7 @@ jobs:
               cd ..;
             fi
       - save_cache:
-          key: v10-bundle-hack
+          key: v11-bundle-hack
           paths:
             - /workspace/sysconfcpus
       - persist_to_workspace:
@@ -100,11 +100,11 @@ jobs:
             - elm-express-boilerplate/elm-stuff/build-artifacts
             - elm-express-boilerplate/tests/elm-stuff/build-artifacts
       - save_cache:
-          key: v10-bundle-{{ checksum "elm-package.json" }}
+          key: v11-bundle-{{ checksum "elm-package.json" }}
           paths:
             - elm-stuff
       - save_cache:
-          key: v10-bundle-{{ checksum "tests/elm-package.json" }}
+          key: v11-bundle-{{ checksum "tests/elm-package.json" }}
           paths:
             - tests/elm-stuff
 
