@@ -94,7 +94,13 @@ jobs:
         - image: node:8.4
       working_directory: /elm-express-boilerplate
       steps:
-        - run: bash ./.circleci/setup-heroku.bash
+        - run:
+            name: save SHA to a file
+            command: echo $CIRCLE_SHA1 > .circle-sha
+        - restore_cache:
+            keys:
+              - v6-repo-{{ checksum ".circle-sha" }}
+        - run: bash .circleci/setup-heroku.bash
         - add_ssh_keys:
             fingerprints:
               - "7c:77:d2:07:31:3f:64:89:ff:77:cb:97:25:89:97:07"
