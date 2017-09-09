@@ -94,7 +94,7 @@ jobs:
         - image: node:8.4
       working_directory: /elm-express-boilerplate
       steps:
-        - run: bash .circleci/setup-heroku.bash
+        - run: bash ./.circleci/setup-heroku.bash
         - add_ssh_keys:
             fingerprints:
               - "7c:77:d2:07:31:3f:64:89:ff:77:cb:97:25:89:97:07"
