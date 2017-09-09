@@ -55,6 +55,7 @@ jobs:
         - run: mv node_modules/.bin/elm-make node_modules/.bin/elm-make-old
         - run: echo "#\!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > node_modules/.bin/elm-make
         - run: chmod +x node_modules/.bin/elm-make
+        - run: node_modules/elm-package install --yes && cd tests && elm-package install --yes
         - save_cache:
             key: v8-bundle-{{ checksum "package.json" }}
             paths:
