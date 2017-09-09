@@ -52,11 +52,12 @@ jobs:
               - v9-bundle-{{ checksum "package.json" }}
               - v9-bundle-{{ checksum "elm-package.json" }}
               - v9-bundle-{{ checksum "tests/elm-package.json" }}
+        - run: yarn global add elm
         - run: npm install
         - run: npm run snyk:t
-        - run: mv node_modules/.bin/elm-make node_modules/.bin/elm-make-old
-        - run: printf "#!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 $CIRCLE_WORKING_DIRECTORY/node_modules/.bin/elm-make-old \"\$@\"" > $CIRCLE_WORKING_DIRECTORY/node_modules/.bin/elm-make
-        - run: chmod +x node_modules/.bin/elm-make
+        - run: mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
+        - run: printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
+        - run: chmod +x $(npm config get prefix)/bin/elm-make
         - run: ./node_modules/.bin/elm-package install --yes && cd tests && ../node_modules/.bin/elm-package install --yes
         - save_cache:
             key: v9-bundle-{{ checksum "package.json" }}
