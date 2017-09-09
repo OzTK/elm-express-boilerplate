@@ -132,17 +132,18 @@ workflows:
   build-test-deploy:
     jobs:
       - clone
-      - hack
       - dependencies:
           requires:
             - clone
-            - hack
+      - hack:
+          requires:
+            - dependencies
       - build:
           requires:
-            - dependencies
+            - hack
       - test:
           requires:
-            - dependencies
+            - hack
       - heroku_deploy:
           requires:
             - build
