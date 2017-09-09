@@ -27,9 +27,9 @@ install:
   - printf '%s\n\n' '#!/bin/bash' 'echo "Running elm-make with sysconfcpus -n 2"' '$TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old "$@"' > $(npm config get prefix)/bin/elm-make
   - chmod +x $(npm config get prefix)/bin/elm-make
   - npm install
-  - travis_retry elm-package install --yes
-  - cd tests && elm-package install --yes
   - snyk test
+  - travis_retry elm-package install --yes
+  - cd tests && elm-package install --yes 
   - rm -f ./node_modules/.bin/elm-make
 
 script:
