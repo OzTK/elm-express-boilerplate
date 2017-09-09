@@ -44,7 +44,7 @@ jobs:
               - v11-bundle-{{ checksum "tests/elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
-        - run: rm ./node_modules/.bin/elm-make
+        - run: rm -f ./node_modules/.bin/elm-make
         - run: elm-package install --yes && cd tests && elm-package install --yes
         - save_cache:
             key: v11-bundle-{{ checksum "package.json" }}
