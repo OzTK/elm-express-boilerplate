@@ -25,7 +25,7 @@
     "postbuild:hot": "./postbuild.sh --dev",
     "build:elm": "elm-make --yes",
     "build:views": "elm-view-engine -v server/views -o dist/views",
-    "heroku-postbuild": "elm-package install --yes && npm-run-all build build:views",
+    "deploy-heroku-postbuild": "elm-package install --yes && npm-run-all build build:views",
     "wp": "webpack --progress",
     "wp-prod": "webpack -p --env.production --progress",
     "ts": "tsc -p .",
