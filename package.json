@@ -16,7 +16,6 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "install": "elm-package install --yes",
     "clean": "rimraf dist",
     "build": "npm-run-all clean ts wp-prod",
     "build:dev": "npm-run-all clean ts wp",

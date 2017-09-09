@@ -18,6 +18,27 @@ jobs:
             paths:
               - elm-express-boilerplate
   
+  hack:
+      <<: *defaults
+      steps:
+        - run: |
+              if [ ! -d /workspace/sysconfcpus/bin ];
+              then
+                git clone https://github.com/obmarg/libsysconfcpus.git; 
+                cd libsysconfcpus;
+                ./configure --prefix=/workspace/sysconfcpus;
+                make && make install;
+                cd ..;
+              fi
+        - save_cache:
+            key: v8-bundle-hack
+            paths:
+              - /workspace/sysconfcpus
+        - persist_to_workspace:
+            root: /workspace
+            paths:
+              - sysconfcpus
+
   dependencies:
       <<: *defaults
       steps:
@@ -25,19 +46,21 @@ jobs:
             at: /workspace
         - restore_cache:
             keys:
-              - v7-bundle-{{ checksum "package.json" }}
+              - v8-bundle-{{ checksum "package.json" }}
         - restore_cache:
             keys:
-              - v7-bundle-{{ checksum "elm-package.json" }}
+              - v8-bundle-{{ checksum "elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
-        - run: npm run build:elm
+        - run: mv node_modules/.bin/elm-make node_modules/.bin/elm-make-old
+        - run: echo "#\!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > node_modules/.bin/elm-make
+        - run: chmod +x node_modules/.bin/elm-make
         - save_cache:
-            key: v7-bundle-{{ checksum "package.json" }}
+            key: v8-bundle-{{ checksum "package.json" }}
             paths:
               - node_modules
         - save_cache:
-            key: v7-bundle-{{ checksum "elm-package.json" }}
+            key: v8-bundle-{{ checksum "elm-package.json" }}
             paths:
               - elm-stuff
         - persist_to_workspace:
@@ -58,8 +81,6 @@ jobs:
       steps:
         - attach_workspace:
             at: /workspace
-        - run: cp -r elm-stuff tests
-        - run: ls tests
         - run: npm test
         - run:
             command: npm test
@@ -88,9 +109,11 @@ workflows:
   build-test-deploy:
     jobs:
       - clone
+      - hack
       - dependencies:
           requires:
             - clone
+            - hack
       - build:
           requires:
             - dependencies
