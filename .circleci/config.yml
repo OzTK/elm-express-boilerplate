@@ -55,7 +55,7 @@ jobs:
         - run: npm install
         - run: npm run snyk:t
         - run: mv node_modules/.bin/elm-make node_modules/.bin/elm-make-old
-        - run: printf "#!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 node_modules/.bin/elm-make-old \"\$@\"" > node_modules/.bin/elm-make
+        - run: printf "#!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 $CIRCLE_WORKING_DIRECTORY/node_modules/.bin/elm-make-old \"\$@\"" > $CIRCLE_WORKING_DIRECTORY/node_modules/.bin/elm-make
         - run: chmod +x node_modules/.bin/elm-make
         - run: ./node_modules/.bin/elm-package install --yes && cd tests && ../node_modules/.bin/elm-package install --yes
         - save_cache:
