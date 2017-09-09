@@ -29,8 +29,8 @@ install:
   - npm install
   - travis_retry elm-package install --yes
   - cd tests && elm-package install --yes
-  - rm -f ./node_modules/.bin/elm-make
   - snyk test
+  - rm -f ./node_modules/.bin/elm-make
 
 script:
   - elm-make --output=/dev/null --yes
