@@ -21,6 +21,9 @@ jobs:
   hack:
       <<: *defaults
       steps:
+        - restore_cache:
+            keys:
+              - v9-bundle-hack
         - run: |
               if [ ! -d /workspace/sysconfcpus/bin ];
               then
@@ -47,15 +50,13 @@ jobs:
         - restore_cache:
             keys:
               - v9-bundle-{{ checksum "package.json" }}
-        - restore_cache:
-            keys:
               - v9-bundle-{{ checksum "elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
         - run: mv node_modules/.bin/elm-make node_modules/.bin/elm-make-old
         - run: echo "#\!/bin/bash\\n\\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > node_modules/.bin/elm-make
         - run: chmod +x node_modules/.bin/elm-make
-        - run: ./node_modules/elm-package install --yes && cd tests && ../node_modules/elm-package install --yes
+        - run: ./node_modules/.bin/elm-package install --yes && cd tests && ../node_modules/.bin/elm-package install --yes
         - save_cache:
             key: v9-bundle-{{ checksum "package.json" }}
             paths:
