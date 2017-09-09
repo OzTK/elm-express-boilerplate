@@ -44,6 +44,7 @@ jobs:
               - v10-bundle-{{ checksum "tests/elm-package.json" }}
         - run: npm install
         - run: npm run snyk:t
+        - run: rm ./node_modules/.bin/elm-make
         - run: elm-package install --yes && cd tests && elm-package install --yes
         - save_cache:
             key: v10-bundle-{{ checksum "package.json" }}
@@ -91,7 +92,6 @@ jobs:
       - *elm
       - attach_workspace:
           at: /workspace
-      - run: cat $(npm config get prefix)/bin/elm-make
       - run: elm-make --yes
       - run: cd tests && elm-make --yes
       - persist_to_workspace:
@@ -156,14 +156,16 @@ workflows:
       - dependencies:
           requires:
             - clone
+      - elm-build:
+          requires:
+            - hack
+            - dependencies
       - build:
           requires:
-            - hack
-            - dependencies
+            - elm-build
       - test:
           requires:
-            - hack
-            - dependencies
+            - elm-build
       - heroku_deploy:
           requires:
             - build
