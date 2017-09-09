@@ -10,37 +10,13 @@ defaults: &defaults
 version: 2
 jobs:
   clone:
-      <<: *defaults
-      steps:
-        - checkout
-        - persist_to_workspace:
-            root: /workspace
-            paths:
-              - elm-express-boilerplate
-  
-  hack:
-      <<: *defaults
-      steps:
-        - restore_cache:
-            keys:
-              - v9-bundle-hack
-        - run: |
-              if [ ! -d /workspace/sysconfcpus/bin ];
-              then
-                git clone https://github.com/obmarg/libsysconfcpus.git; 
-                cd libsysconfcpus;
-                ./configure --prefix=/workspace/sysconfcpus;
-                make && make install;
-                cd ..;
-              fi
-        - save_cache:
-            key: v9-bundle-hack
-            paths:
-              - /workspace/sysconfcpus
-        - persist_to_workspace:
-            root: /workspace
-            paths:
-              - sysconfcpus
+    <<: *defaults
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - elm-express-boilerplate
 
   dependencies:
       <<: *defaults
@@ -49,69 +25,107 @@ jobs:
             at: /workspace
         - restore_cache:
             keys:
-              - v9-bundle-{{ checksum "package.json" }}
-              - v9-bundle-{{ checksum "elm-package.json" }}
-              - v9-bundle-{{ checksum "tests/elm-package.json" }}
+              - v10-bundle-{{ checksum "package.json" }}
+              - v10-bundle-{{ checksum "elm-package.json" }}
+              - v10-bundle-{{ checksum "tests/elm-package.json" }}
         - run: yarn global add elm
         - run: npm install
         - run: npm run snyk:t
-        - run: mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
-        - run: printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
-        - run: chmod +x $(npm config get prefix)/bin/elm-make
-        - run: ./node_modules/.bin/elm-package install --yes && cd tests && ../node_modules/.bin/elm-package install --yes
+        - run: elm-package install --yes && cd tests && elm-package install --yes
         - save_cache:
-            key: v9-bundle-{{ checksum "package.json" }}
+            key: v10-bundle-{{ checksum "package.json" }}
             paths:
               - node_modules
-        - save_cache:
-            key: v9-bundle-{{ checksum "elm-package.json" }}
-            paths:
-              - elm-stuff
-        - save_cache:
-            key: v9-bundle-{{ checksum "tests/elm-package.json" }}
-            paths:
-              - tests/elm-stuff
         - persist_to_workspace:
             root: /workspace
             paths:
               - elm-express-boilerplate/node_modules
               - elm-express-boilerplate/elm-stuff
               - elm-express-boilerplate/tests/elm-stuff
+  
+  hack:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          keys:
+            - v10-bundle-hack
+      - run: |
+            if [ ! -d /workspace/sysconfcpus/bin ];
+            then
+              git clone https://github.com/obmarg/libsysconfcpus.git; 
+              cd libsysconfcpus;
+              ./configure --prefix=/workspace/sysconfcpus;
+              make && make install;
+              cd ..;
+            fi
+      - run: mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
+      - run: printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
+      - run: chmod +x $(npm config get prefix)/bin/elm-make
+      - save_cache:
+          key: v10-bundle-hack
+          paths:
+            - /workspace/sysconfcpus
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - sysconfcpus
+
+  elm-build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /workspace
+      - run: cat $(npm config get prefix)/bin/elm-make
+      - run: elm-make --yes
+      - run: cd tests && elm-make --yes
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - elm-express-boilerplate/elm-stuff/build-artifacts
+            - elm-express-boilerplate/tests/elm-stuff/build-artifacts
+      - save_cache:
+          key: v10-bundle-{{ checksum "elm-package.json" }}
+          paths:
+            - elm-stuff
+      - save_cache:
+          key: v10-bundle-{{ checksum "tests/elm-package.json" }}
+          paths:
+            - tests/elm-stuff
 
   build:
-      <<: *defaults
-      steps:
-        - attach_workspace:
-            at: /workspace
-        - run: npm run build
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /workspace
+      - run: npm run build
 
   test:
-      <<: *defaults
-      steps:
-        - attach_workspace:
-            at: /workspace
-        - run: npm test
-        - run:
-            command: npm test
-            when: on_fail
-            no_output_timeout: 20m
-        - run: npm run snyk:m
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /workspace
+      - run: npm test
+      - run:
+          command: npm test
+          when: on_fail
+          no_output_timeout: 20m
+      - run: npm run snyk:m
 
   heroku_deploy:
-      <<: *defaults
-      steps:
-        - attach_workspace:
-            at: /workspace
-        - run: bash .circleci/setup-heroku.bash
-        - add_ssh_keys:
-            fingerprints:
-              - "7c:77:d2:07:31:3f:64:89:ff:77:cb:97:25:89:97:07"
-        - deploy:
-            name: Deploy master to Heroku
-            command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                git push heroku master
-              fi
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /workspace
+      - run: bash .circleci/setup-heroku.bash
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:77:d2:07:31:3f:64:89:ff:77:cb:97:25:89:97:07"
+      - deploy:
+          name: Deploy master to Heroku
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              git push heroku master
+            fi
 
 workflows:
   version: 2
