@@ -7,14 +7,17 @@ defaults: &defaults
     - image: node:8.4
   working_directory: /workspace/elm-express-boilerplate
 
+yarn: &yarn
+  restore_cache:
+    keys:
+      - v10-bundle-yarn
+
 elm: &elm
-  - restore_cache:
-      keys:
-        - v10-bundle-yarn
-  - run: yarn global add elm
-  - run: mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
-  - run: printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
-  - run: chmod +x $(npm config get prefix)/bin/elm-make
+  run: |
+      yarn global add elm
+      mv $(npm config get prefix)/bin/elm-make $(npm config get prefix)/bin/elm-make-old
+      printf "#\041/bin/bash\n\necho \"Running elm-make with sysconfcpus -n 2\"\n\n/workspace/sysconfcpus/bin/sysconfcpus -n 2 elm-make-old \"\$@\"" > $(npm config get prefix)/bin/elm-make
+      chmod +x $(npm config get prefix)/bin/elm-make
 
 version: 2
 jobs:
@@ -30,7 +33,8 @@ jobs:
   dependencies:
       <<: *defaults
       steps:
-        <<: *elm
+        - *yarn
+        - *elm
         - attach_workspace:
             at: /workspace
         - restore_cache:
@@ -83,7 +87,8 @@ jobs:
   elm-build:
     <<: *defaults
     steps:
-      <<: *elm
+      - *yarn
+      - *elm
       - attach_workspace:
           at: /workspace
       - run: cat $(npm config get prefix)/bin/elm-make
@@ -106,7 +111,8 @@ jobs:
   build:
     <<: *defaults
     steps:
-      <<: *elm
+      - *yarn
+      - *elm
       - attach_workspace:
           at: /workspace
       - run: npm run build
@@ -114,7 +120,8 @@ jobs:
   test:
     <<: *defaults
     steps:
-      <<: *elm
+      - *yarn
+      - *elm
       - attach_workspace:
           at: /workspace
       - run: npm test
