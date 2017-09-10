@@ -13,9 +13,9 @@
         "LICENSE": true,
         "package-lock.json": true,
         "types": true,
-        // "**/elm-stuff": true,
-        "**/.vscode": true
+        "**/elm-stuff": true,
+        "**/.vscode": true,
         // "**/*.js": { "when": "$(basename).ts" },
-        // "**/*.js.map": { "when": "$(basename)" }
+        "**/*.js.map": { "when": "$(basename)" }
     }
 }
