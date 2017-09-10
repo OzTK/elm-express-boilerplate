@@ -34,6 +34,7 @@ install:
 
 script:
   - elm-make --output=/dev/null --yes
+  - cp -r elm-stuff tests
   - cd tests && elm-make --output=/dev/null --yes && cd ..
   - npm run build
   - npm run test
