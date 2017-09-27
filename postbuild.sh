@@ -5,7 +5,7 @@ copyfiles www\
           package.json\
           dist #Destination dir
 
-copyfiles -f server/views/* dist/views
+copyfiles -u 2 'server/views/**/*' dist/views
 copyfiles -u 1 'assets/**/*' dist/public
 
 if [ $# == 1 ] && [ "$1" == "--dev" ]; then

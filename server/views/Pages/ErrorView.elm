@@ -1,4 +1,4 @@
-module ErrorView exposing (view, context)
+module Pages.ErrorView exposing (view, context)
 
 import Regex exposing (replace, regex, HowMany(All))
 import Json.Decode.Pipeline exposing (decode, required, optional)

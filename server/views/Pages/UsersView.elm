@@ -1,4 +1,4 @@
-module UsersView exposing (..)
+module Pages.UsersView exposing (..)
 
 import Json.Decode
 import Json.Encode as JE

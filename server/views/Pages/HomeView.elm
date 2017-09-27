@@ -1,4 +1,4 @@
-module HomeView exposing (view, context)
+module Pages.HomeView exposing (view, context)
 
 import Json.Decode.Pipeline exposing (decode, required)
 import Json.Decode exposing (Decoder, string)
