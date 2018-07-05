@@ -1,9 +1,13 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.7.1
+version: v1.12.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:tunnel-agent:20170305':
     - elm > request > tunnel-agent:
         reason: ignore for now
         expires: '2017-10-07T19:47:26.642Z'
-patch: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:lodash:20180130':
+    - winston-express-middleware > lodash:
+        patched: '2018-07-05T05:26:03.185Z'
