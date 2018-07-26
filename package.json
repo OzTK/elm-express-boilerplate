@@ -35,7 +35,9 @@
     "watch": "npm-watch build:views",
     "test": "elm-test",
     "snyk:t": "snyk test",
-    "snyk:m": "snyk monitor"
+    "snyk:m": "snyk monitor",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "watch": {
     "build:views": {
@@ -65,7 +67,8 @@
     "serve-favicon": "^2.4.5",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2",
-    "winston-express-middleware": "^0.1.0"
+    "winston-express-middleware": "^0.1.0",
+    "snyk": "^1.89.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.5",
@@ -94,7 +97,6 @@
     "npm-run-all": "^4.1.1",
     "npm-watch": "^0.3.0",
     "rimraf": "^2.6.2",
-    "snyk": "^1.42.6",
     "standard": "^10.0.3",
     "style-loader": "^0.19.0",
     "ts-loader": "^2.3.7",
@@ -103,5 +105,6 @@
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.19.1",
     "webpack-sources": "^1.0.1"
-  }
+  },
+  "snyk": true
 }
