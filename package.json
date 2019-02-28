@@ -57,7 +57,7 @@
     "debug": "^3.1.0",
     "elm-view-engine": "^2.1.2",
     "express": "^4.16.2",
-    "hbs": "~4.0.1",
+    "hbs": "~4.0.2",
     "hbs-utils": "0.0.4",
     "helmet": "^3.8.2",
     "inversify": "^4.3.0",
