@@ -57,9 +57,9 @@
     "debug": "^3.1.0",
     "elm-view-engine": "^2.1.2",
     "express": "^4.16.2",
-    "hbs": "~4.0.1",
+    "hbs": "~4.0.5",
     "hbs-utils": "0.0.4",
-    "helmet": "^3.8.2",
+    "helmet": "^3.21.1",
     "inversify": "^4.3.0",
     "inversify-express-utils": "^4.0.1",
     "morgan": "^1.9.0",
@@ -68,7 +68,7 @@
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2",
     "winston-express-middleware": "^0.1.0",
-    "snyk": "^1.76.0"
+    "snyk": "^1.230.5"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.5",
