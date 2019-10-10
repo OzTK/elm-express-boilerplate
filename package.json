@@ -68,7 +68,7 @@
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2",
     "winston-express-middleware": "^0.1.0",
-    "snyk": "^1.76.0"
+    "snyk": "^1.234.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.5",
