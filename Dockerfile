@@ -1,4 +1,4 @@
-FROM node:8.4
+FROM node:8.15
 ENV NODE_ENV production
 ENV NPM_CONFIG_PRODUCTION false
 WORKDIR /app
